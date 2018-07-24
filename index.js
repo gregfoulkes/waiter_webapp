@@ -37,7 +37,7 @@ if (process.env.DATABASE_URL) {
   useSSL = true;
 }
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://coder:1234@localhost:5432/waiter_webapp'
+const connectionString = process.env.DATABASE_URL || 'postgresql://coder:1234@localhost:5432/waiter_webapp_test'
 
 const pool = new Pool({
   connectionString,
@@ -63,7 +63,7 @@ app.engine('handlebars', exphbs({
   //       return 'selected'
   //     }
   //   }
-  }
+
 
 }));
 
@@ -72,4 +72,11 @@ app.set('view engine', 'handlebars');
 //call factory function
 
 const WaiterApp = require('./waiter_webapp.js');
-const Waiter = WaiterApp(pool)
+const Waiter = WaiterApp(pool);
+
+
+
+
+(async function() {
+  console.log(await Waiter.assignShift('gregfoulkes', 'Monday'));
+}());

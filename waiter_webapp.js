@@ -37,15 +37,30 @@ module.exports = function(pool) {
       return false
     }
 
-
     let enteredUserNames = await pool.query('SELECT user_name, name from waiter')
     return enteredUserNames.rows
+  }
+
+  async function assignShift(username, day){
+
+    if(username != '' && day != ''){
+      let userResult = await pool.query('SELECT id from waiter WHERE user_name=$1',[username]);
+      console.log('userResult: ' + userResult.rows[0]);
+      //if (userResult.rowcount > 0){
+        let dayResult = await pool.query('SELECT id from weekdays WHERE day_name=$1',[day]);
+        console.log('dayResult: ' + dayResult.rows[0]);
+        await pool.query ('INSERT INTO shifts(waiter_id, weekday_id) VALUES($1, $2)',[userResult.rows[0].id, dayResult.rows[0].id])
+      //}
+    }
+    let seeShifts = ('SELECT waiter_id, weekday_id from shifts ')
+return seeShifts.rows
   }
 
       return{
         addWeekdays,
         addWaiter,
-        addWaiters
+        addWaiters,
+        assignShift
       }
 
     }

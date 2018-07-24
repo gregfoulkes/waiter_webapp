@@ -21,9 +21,10 @@ const pool = new Pool({
 describe('Add Weekdays', function() {
 
   beforeEach(async function() {
+    await pool.query("delete from shifts");
+
     await pool.query("delete from weekdays");
     await pool.query("delete from waiter");
-    await pool.query("delete from shifts");
   });
 
   it('Should return a list of weekdays', async function() {
@@ -38,7 +39,7 @@ describe('Add Weekdays', function() {
   { day_name: 'Saturday'},
   { day_name: 'Sunday'}])
 
-  console.log(await waiterApp.addWeekdays())
+  //console.log(await waiterApp.addWeekdays())
   });
 
   it('Should return a list of user names', async function(){
@@ -49,7 +50,7 @@ describe('Add Weekdays', function() {
 
     assert.deepEqual(waiter, true)
 
-  console.log(waiter)
+  //console.log(waiter)
 
 });
 
@@ -68,9 +69,28 @@ it('Should return all the waiters names and usernames', async function(){
     {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
   ])
 
-  console.log(await waiterApp.addWaiters(userData))
+  //console.log(await waiterApp.addWaiters(userData))
 
 });
+
+it('Should return waiter and day ID', async function(){
+
+  var waiterApp = WaiterApp(pool);
+
+  var userData = [{user_name: 'greg', name: 'Greg Foulkes'},
+    {user_name: 'aya', name: 'Ayabonga Booi'},
+    {user_name: 'luvuyo', name: 'Luvuyo Sono' },
+    {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
+  ]
+
+  //var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+  await waiterApp.addWaiters(userData);
+  await waiterApp.addWeekdays();
+  assert.equal(await waiterApp.assignShift('greg', 'Monday'), [{waiter_id: 1, weekday_id: 1}])
+
+  console.log(await waiterApp.assignShift('greg', 'Monday'))
+})
 
   after(async function() {
     await pool.end();
