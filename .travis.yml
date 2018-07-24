@@ -1,0 +1,17 @@
+language: node_js
+
+env:
+     - DB=postgresql://postgres@localhost:5432/waiter_webapp_test
+node_js:
+        - "8.9.4"
+
+before_script:
+  # - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+  # - sudo service postgresql restart
+  - psql -c 'create database  waiter_webapp_test;' -U postgres
+  - psql -U postgres -d waiter_webapp_test -a -f waiter_webapp_table.sql
+
+addons:
+    apt:
+    packages:
+    - postgresql-server-dev-9.2
