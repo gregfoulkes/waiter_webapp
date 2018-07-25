@@ -75,9 +75,9 @@ it('Should return all the waiters names and usernames', async function(){
 
 it('Should return waiter and day ID', async function(){
 
-  var waiterApp = WaiterApp(pool);
+  const waiterApp = WaiterApp(pool);
 
-  var userData = [{user_name: 'greg', name: 'Greg Foulkes'},
+  const userData = [{user_name: 'greg', name: 'Greg Foulkes'},
     {user_name: 'aya', name: 'Ayabonga Booi'},
     {user_name: 'luvuyo', name: 'Luvuyo Sono' },
     {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
@@ -87,9 +87,30 @@ it('Should return waiter and day ID', async function(){
 
   await waiterApp.addWaiters(userData);
   await waiterApp.addWeekdays();
-  assert.equal(await waiterApp.assignShift('greg', 'Monday'), [{waiter_id: 1, weekday_id: 1}])
 
-  console.log(await waiterApp.assignShift('greg', 'Monday'))
+  await waiterApp.assignShift('greg', 'Monday');
+
+  // now check if there is a shift for Greg on Monday
+  let username = 'greg';
+  let dayName = 'Monday'
+  // let sql = `
+  //   select weekdays.day_name, waiter.user_name from user
+  //   join shifts on shifts.waiter_id = user.id
+  //   join weekdays on weekdays.id = shifts.weekdays_id
+  //   where user_name = '${username}' and
+  //   shift.weekday_id = '${dayName}'
+  // `
+  let poolQuery =  await pool.query(`
+    select weekdays.day_name, waiter.user_name from weekdays, waiter
+    join shifts on shifts.waiter_id = waiter.id
+    join weekdays on weekdays.id = shifts.weekday_id
+    where user_name = '${username}' and
+    shift.weekday_id = '${dayName}'
+  `);
+console.log(poolQuery)
+  assert.equal(waiterApp.assignShift( 'greg', 'Monday'), 'greg', 'Monday')
+
+
 })
 
   after(async function() {
