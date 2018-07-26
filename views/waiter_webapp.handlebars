@@ -1,0 +1,31 @@
+
+    <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
+<!-- <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+<div class="mdl-layout__drawer">
+  <span class="mdl-layout-title">Title</span>
+
+</div>
+<main class="mdl-layout__content">
+  <div class="page-content"></div>
+</main>
+</div> -->
+
+<div class="container">
+<h1>Waiter WebApp</h1>
+
+<form class="" action="/waiters" method="post">
+  <input type="text" name="user" value="" placeholder="Enter User Name">
+<button type="submit" name="button">Submit</button>
+
+{{#each selectDays}}
+
+<h5> {{day_name}}</h5>
+
+{{/each}}
+
+
+</form>
+
+
+
+</div>

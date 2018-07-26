@@ -46,7 +46,7 @@ describe('Add Weekdays', function() {
     var waiterApp = WaiterApp(pool);
 
   //  const waiter = await waiterApp.addWaiter({ username: 'greg', fullName: 'Greg Foulkes', })
-    const waiter = await waiterApp.addWaiter({user_name:'greg', name: 'Greg Foulkes'})
+    const waiter = await waiterApp.addWaiter({user_name:'greg', full_name: 'Greg Foulkes'})
 
     assert.deepEqual(waiter, true)
 
@@ -57,16 +57,16 @@ describe('Add Weekdays', function() {
 it('Should return all the waiters names and usernames', async function(){
   var waiterApp = WaiterApp(pool);
 
-  var userData = [{user_name: 'greg', name: 'Greg Foulkes'},
-    {user_name: 'aya', name: 'Ayabonga Booi'},
-    {user_name: 'luvuyo', name: 'Luvuyo Sono' },
-    {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
+  var userData = [{user_name: 'greg', full_name: 'Greg Foulkes'},
+    {user_name: 'aya', full_name: 'Ayabonga Booi'},
+    {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
+    {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
   ]
 
-  assert.deepEqual(await waiterApp.addWaiters(userData), [{user_name: 'greg', name: 'Greg Foulkes'},
-    {user_name: 'aya', name: 'Ayabonga Booi'},
-    {user_name: 'luvuyo', name: 'Luvuyo Sono' },
-    {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
+  assert.deepEqual(await waiterApp.addWaiters(userData), [{user_name: 'greg', full_name: 'Greg Foulkes'},
+    {user_name: 'aya', full_name: 'Ayabonga Booi'},
+    {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
+    {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
   ])
 
   //console.log(await waiterApp.addWaiters(userData))
@@ -77,10 +77,10 @@ it('Should return waiter and day ID', async function(){
 
   const waiterApp = WaiterApp(pool);
 
-  const userData = [{user_name: 'greg', name: 'Greg Foulkes'},
-    {user_name: 'aya', name: 'Ayabonga Booi'},
-    {user_name: 'luvuyo', name: 'Luvuyo Sono' },
-    {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
+  const userData = [{user_name: 'greg', full_name: 'Greg Foulkes'},
+    {user_name: 'aya', full_name: 'Ayabonga Booi'},
+    {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
+    {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
   ]
 
   //var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -90,26 +90,7 @@ it('Should return waiter and day ID', async function(){
 
   await waiterApp.assignShift('greg', 'Monday');
 
-  // now check if there is a shift for Greg on Monday
-  let username = 'greg';
-  let dayName = 'Monday'
-  // let sql = `
-  //   select weekdays.day_name, waiter.user_name from user
-  //   join shifts on shifts.waiter_id = user.id
-  //   join weekdays on weekdays.id = shifts.weekdays_id
-  //   where user_name = '${username}' and
-  //   shift.weekday_id = '${dayName}'
-  // `
-  let poolQuery =  await pool.query(`
-    select weekdays.day_name, waiter.user_name from weekdays, waiter
-    join shifts on shifts.waiter_id = waiter.id
-    join weekdays on weekdays.id = shifts.weekday_id
-    where user_name = '${username}' and
-    shift.weekday_id = '${dayName}'
-  `);
-console.log(poolQuery)
-  assert.equal(waiterApp.assignShift( 'greg', 'Monday'), 'greg', 'Monday')
-
+  assert.deepEqual(await waiterApp.checkShifts('greg', 'Monday'), [{user_name:'greg', day_name:'Monday'}])
 
 })
 
@@ -117,3 +98,28 @@ console.log(poolQuery)
     await pool.end();
   });
 });
+
+// await waiterAvail.addShift("johndoe", "Thursday");
+//
+// let waiter_ids = await pool.query(
+//  "SELECT id from users WHERE user_name = $1",
+//  ["johndoe"]
+// );
+//
+// let weekday_ids = await pool.query(
+//  "SELECT id from weekdays WHERE day_name = $1",
+//  ["Thursday"]
+// );
+//
+// let waiter_id = waiter_ids.rows[0].id;
+// let weekday_id = weekday_ids.rows[0].id;
+//
+// let shifts = await pool.query(
+//  "select * from shifts WHERE waiter_id = $1 and weekday_id = $2",
+//  [waiter_id, weekday_id]
+// );
+//
+// let shift = shifts.rows[0];
+//
+// assert.equal(waiter_id, shift.waiter_id);
+// assert.equal(weekday_id, shift.weekday_id);

@@ -3,7 +3,7 @@ drop table if exists waiter CASCADE;
 create table waiter (
 	id serial not null primary key,
   user_name text not null,
-	name text not null
+	full_name text not null
 );
 
 drop table if exists weekdays CASCADE ;

@@ -52,18 +52,10 @@ app.listen(PORT, function() {
   console.log('App starting on port', PORT);
 });
 
-
 //Handlebars setup
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main',
-  // helpers: {
-  //   selectedTag: function() {
-  //     if (this.selected) {
-  //       return 'selected'
-  //     }
-  //   }
-
 
 }));
 
@@ -76,7 +68,60 @@ const Waiter = WaiterApp(pool);
 
 
 
+app.get('/', async function(req, res, next) {
+  //await Waiter.addWaiters(userData)
 
-(async function() {
-  console.log(await Waiter.assignShift('gregfoulkes', 'Monday'));
-}());
+  try {
+    res.render('waiter_webapp',{selectDays:await Waiter.addWeekdays()}  )
+
+  } catch (err) {
+    return next()
+  }
+
+
+});
+
+// app.post('/waiter_webapp', async function (req, res){
+//   await Waiter.addWaiters(userData)
+//
+//   try {
+//     res.render('waiter_webapp', selectDays: await Waiter.weekdays()  )
+//   } catch (err) {
+//     return next()
+//   }
+// })
+
+// app.get('/waiter:username', async function(req, res) {
+//
+// try {
+//   res.render('waiter_webapp', )
+// } catch (err) {
+//   return next()
+// }
+//
+// })
+
+
+// (async function() {
+//   await Waiter.addWaiters(userData);
+//   await Waiter.addWeekdays();
+//   console.log(await Waiter.assignShift('gregfoulkes', 'Monday'));
+// }());
+
+var userData = [{
+    user_name: 'greg',
+    full_name: 'Greg Foulkes'
+  },
+  {
+    user_name: 'aya',
+    full_name: 'Ayabonga Booi'
+  },
+  {
+    user_name: 'luvuyo',
+    full_name: 'Luvuyo Sono'
+  },
+  {
+    user_name: 'aviwe',
+    full_name: 'Aviwe Mbekeni'
+  }
+]
