@@ -66,13 +66,27 @@ app.set('view engine', 'handlebars');
 const WaiterApp = require('./waiter_webapp.js');
 const Waiter = WaiterApp(pool);
 
+app.get('/', async function(req, res, next){
+  try {
+    res.render('login')
+  } catch (err) {
+    return next()
+  }
+})
 
-
-app.get('/', async function(req, res, next) {
+app.post('/waiters', async function(req, res, next) {
   //await Waiter.addWaiters(userData)
 
+
+
+  await Waiter.deleteWeekdays()
+  await Waiter.addWeekdays()
   try {
-    res.render('waiter_webapp',{selectDays:await Waiter.addWeekdays()}  )
+  let waiterName =  req.body.waiter
+  let dayName = req.body.dayName
+
+  Waiter.assignShift(waiterName)
+    res.render('waiter_webapp',{selectDays:await Waiter.getWeekdays()}  )
 
   } catch (err) {
     return next()
@@ -81,11 +95,16 @@ app.get('/', async function(req, res, next) {
 
 });
 
-// app.post('/waiter_webapp', async function (req, res){
-//   await Waiter.addWaiters(userData)
+app.get('/days', async function(){
+
+});
+
+// app.get('/waiters', async function (req, res){
+//   //await Waiter.addWaiters(userData)
+//   await Waiter.deleteWeekdays()
 //
 //   try {
-//     res.render('waiter_webapp', selectDays: await Waiter.weekdays()  )
+//     res.render('waiter_webapp', await Waiter.weekdays()  )
 //   } catch (err) {
 //     return next()
 //   }
