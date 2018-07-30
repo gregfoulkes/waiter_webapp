@@ -46,37 +46,23 @@ module.exports = function(pool) {
     return enteredUserNames.rows
   }
 
-  async function assignShift(userName, dayName) {
+  async function assignShifts(params) {
 
-    // for (let shiftData of params){}(
-    //
-    // )
+    for (let shiftDays of params){
+    //  if (shiftData.userName != '' && shiftData.dayName != '') {
+        let userResult = await pool.query('SELECT id from waiter WHERE user_name=$1', [shiftDays.user_name]);
 
-    if (userName != '' && dayName != '') {
-      let userResult = await pool.query('SELECT id from waiter WHERE user_name=$1', [userName]);
+        let dayResult = await pool.query('SELECT id from weekdays WHERE day_name=$1', [shiftDays.day_name]);
 
-      let dayResult = await pool.query('SELECT id from weekdays WHERE day_name=$1', [dayName]);
+        await pool.query('INSERT INTO shifts(waiter_id, weekday_id) VALUES($1, $2)', [userResult.rows[0].id, dayResult.rows[0].id])
+        //}
+      }
+      let result = await pool.query('select * from shifts')
+      //console.log(result.rows)
+      return result.rows
 
-      await pool.query('INSERT INTO shifts(waiter_id, weekday_id) VALUES($1, $2)', [userResult.rows[0].id, dayResult.rows[0].id])
-      //}
     }
 
-
-  }
-
-  async function checkShifts(userName, dayName) {
-
-    let poolQuery = await pool.query(`
-        select distinct user_name, day_name from shifts
-        join waiter on waiter.id = shifts.waiter_id
-        join weekdays on weekdays.id = shifts.weekday_id
-        where weekdays.day_name = '${dayName}'
-        and waiter.user_name = '${userName}';
-      `);
-
-    console.log(poolQuery.rows)
-    return poolQuery.rows
-  }
 
   async function checkShifts(userName) {
 
@@ -88,7 +74,7 @@ module.exports = function(pool) {
         where waiter.user_name = '${userName}';
 
       `);
-    console.log(poolQuery.rows)
+    //console.log(poolQuery.rows)
     return poolQuery.rows
   }
 
@@ -119,7 +105,7 @@ module.exports = function(pool) {
     addWeekdays,
     addWaiter,
     addWaiters,
-    assignShift,
+    assignShifts,
     checkShifts,
     deleteWeekdays,
     deleteUsers,
@@ -128,3 +114,33 @@ module.exports = function(pool) {
   }
 
   }
+
+  // async function assignShift(userName, dayName) {
+  //
+  //
+  //
+  //   if (userName != '' && dayName != '') {
+  //     let userResult = await pool.query('SELECT id from waiter WHERE user_name=$1', [userName]);
+  //
+  //     let dayResult = await pool.query('SELECT id from weekdays WHERE day_name=$1', [dayName]);
+  //
+  //     await pool.query('INSERT INTO shifts(waiter_id, weekday_id) VALUES($1, $2)', [userResult.rows[0].id, dayResult.rows[0].id])
+  //     //}
+  //   }
+  //
+  //
+  // }
+
+  // async function checkShifts(userName, dayName) {
+  //
+  //   let poolQuery = await pool.query(`
+  //       select distinct user_name, day_name from shifts
+  //       join waiter on waiter.id = shifts.waiter_id
+  //       join weekdays on weekdays.id = shifts.weekday_id
+  //       where weekdays.day_name = '${dayName}'
+  //       and waiter.user_name = '${userName}';
+  //     `);
+  //
+  //   console.log(poolQuery.rows)
+  //   return poolQuery.rows
+  // }

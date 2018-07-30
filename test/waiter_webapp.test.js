@@ -80,10 +80,10 @@ describe('Add Weekdays', function() {
     await waiterApp.addWaiters();
     await waiterApp.addWeekdays();
 
-    await waiterApp.assignShift('greg', 'Monday');
-    await waiterApp.assignShift('greg', 'Wednesday');
+    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}]);
+    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Wednesday'}]);
 
-    assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg',},
+    assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg'},
     {day_name:'Wednesday', user_name:'greg' }
 
 
@@ -97,9 +97,8 @@ describe('Add Weekdays', function() {
     const waiterApp = WaiterApp(pool);
     await waiterApp.addWeekdays()
     await waiterApp.addWaiters()
-    console.log()
-    await waiterApp.assignShift('greg', 'Monday')
-    await waiterApp.assignShift('greg', 'Wednesday');
+    await waiterApp.assignShifts([{user_name:'greg', day_name:'Monday'}])
+    await waiterApp.assignShifts([{user_name:'greg', day_name:'Wednesday'}]);
 
     assert.deepEqual( await waiterApp.deleteShifts(), [])
 
@@ -122,6 +121,16 @@ describe('Add Weekdays', function() {
     assert.deepEqual(await waiterApp.deleteUsers(), [])
   });
 
+  it('Should assign shifts to a user and return the user and the days they are working', async function(){
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+
+    assert.deepEqual(await waiterApp.checkShifts('greg'), [{user_name: 'greg', day_name: 'Monday'},{user_name: 'greg', day_name: 'Wednesday'}])
+
+  })
   after(async function() {
     await pool.end();
   });
