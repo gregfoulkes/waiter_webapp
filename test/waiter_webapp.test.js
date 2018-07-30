@@ -93,7 +93,7 @@ describe('Waiter Web App Functions', function() {
 
     //console.log(checkAll)
 
-    assert.deepEqual(checkAll, [{user_name: 'greg', day_name: 'Wednesday'}, {user_name: 'luvuyo', day_name: 'Monday'}])
+    assert.deepEqual(checkAll, [{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
 
   })
 
