@@ -27,7 +27,7 @@ describe('Add Weekdays', function() {
     await pool.query("delete from waiter");
   });
 
-  it('Should return a list of weekdays', async function() {
+  it('Should add all weekdays and return a list of weekdays', async function() {
     var waiterApp = WaiterApp(pool);
 
     await waiterApp.addWeekdays()
@@ -43,7 +43,7 @@ describe('Add Weekdays', function() {
 
   });
 
-  it('Should return a list of user names', async function() {
+  it('Should add a waiter user_name and full_name and return a list of user names', async function() {
     var waiterApp = WaiterApp(pool);
 
     //  const waiter = await waiterApp.addWaiter({ username: 'greg', fullName: 'Greg Foulkes', })
@@ -58,7 +58,7 @@ describe('Add Weekdays', function() {
 
   });
 
-  it('Should return all the waiters names and usernames', async function(){
+  it('Should add all user/waiter names and return all the waiters full names and usernames', async function(){
     var waiterApp = WaiterApp(pool);
 
     assert.deepEqual(await waiterApp.addWaiters(), [{user_name: 'greg', full_name: 'Greg Foulkes'},
@@ -71,7 +71,18 @@ describe('Add Weekdays', function() {
 
   });
 
-  it('Should return waiter user_name and shift days', async function(){
+  it('Should assign shifts to a user and return the user and the days they are working', async function(){
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+
+    assert.deepEqual(await waiterApp.checkShifts('greg'), [{user_name: 'greg', day_name: 'Monday'},{user_name: 'greg', day_name: 'Wednesday'}])
+
+  })
+
+  it('Should check a user_name and return the waiter user_name and all shift days', async function(){
 
     const waiterApp = WaiterApp(pool);
 
@@ -121,16 +132,7 @@ describe('Add Weekdays', function() {
     assert.deepEqual(await waiterApp.deleteUsers(), [])
   });
 
-  it('Should assign shifts to a user and return the user and the days they are working', async function(){
-    var waiterApp = WaiterApp(pool);
 
-    await waiterApp.addWeekdays();
-    await waiterApp.addWaiters();
-    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
-
-    assert.deepEqual(await waiterApp.checkShifts('greg'), [{user_name: 'greg', day_name: 'Monday'},{user_name: 'greg', day_name: 'Wednesday'}])
-
-  })
   after(async function() {
     await pool.end();
   });

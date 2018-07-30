@@ -79,16 +79,19 @@ app.post('/waiters', async function(req, res, next) {
   //await Waiter.addWaiters(userData)
 
 
+  await Waiter.deleteShifts()
 
   await Waiter.deleteWeekdays()
-  await Waiter.deleteShifts()
 
   await Waiter.addWeekdays()
   try {
-  let waiterName =  req.body.waiter
-  let dayName = req.body.dayName
 
-  Waiter.assignShift(waiterName)
+    let shiftData = [{user_name: req.params.waiter,
+    day_name: req.body.dayName }]
+  // let waiterName =  req.body.waiter
+  // let dayName = req.body.dayName
+
+//  await Waiter.assignShifts(shiftData)
     res.render('waiter_webapp',{selectDays:await Waiter.getWeekdays()}  )
 
   } catch (err) {
@@ -99,8 +102,14 @@ app.post('/waiters', async function(req, res, next) {
 
 app.post('/waiters/:waiter', async function(req, res, next) {
   //await Waiter.addWaiters(userData)
-  let waiter = req.params.waiterName
-  Waiter.assignShift(waiterName)
+
+  // await Waiter.deleteWeekdays()
+  // await Waiter.deleteShifts()
+
+  let shiftData = [{user_name: req.params.waiter,
+  day_name: req.body.dayName }]
+  //let waiter = req.params.waiterName
+  Waiter.assignShifts(shiftData)
 
   try{
     res.render('waiter_webapp',{selectDays:await Waiter.getWeekdays(),

@@ -70,10 +70,8 @@ module.exports = function(pool) {
         select distinct user_name, day_name from shifts
         join waiter on waiter.id = shifts.waiter_id
         join weekdays on weekdays.id = shifts.weekday_id
-
         where waiter.user_name = '${userName}';
-
-      `);
+        `);
     //console.log(poolQuery.rows)
     return poolQuery.rows
   }
