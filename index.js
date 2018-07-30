@@ -68,18 +68,21 @@ const Waiter = WaiterApp(pool);
 
 app.get('/', async function(req, res, next){
   try {
+  //  await Waiter.addWaiters()
+console.log(await Waiter.addWaiters())
     res.render('login')
   } catch (err) {
     return next()
   }
 })
-
 app.post('/waiters', async function(req, res, next) {
   //await Waiter.addWaiters(userData)
 
 
 
   await Waiter.deleteWeekdays()
+  await Waiter.deleteShifts()
+
   await Waiter.addWeekdays()
   try {
   let waiterName =  req.body.waiter
@@ -92,8 +95,23 @@ app.post('/waiters', async function(req, res, next) {
     return next()
   }
 
-
 });
+
+app.post('/waiters/:waiter', async function(req, res, next) {
+  //await Waiter.addWaiters(userData)
+  let waiter = req.params.waiterName
+  Waiter.assignShift(waiterName)
+
+  try{
+    res.render('waiter_webapp',{selectDays:await Waiter.getWeekdays(),
+    waiter}  )
+
+  } catch (err) {
+    return next()
+  }
+});
+
+
 
 app.get('/days', async function(){
 

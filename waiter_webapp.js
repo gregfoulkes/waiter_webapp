@@ -2,10 +2,10 @@ module.exports = function(pool) {
 
     const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    var userData = [{user_name: 'greg', name: 'Greg Foulkes'},
-      {user_name: 'aya', name: 'Ayabonga Booi'},
-      {user_name: 'luvuyo', name: 'Luvuyo Sono' },
-      {user_name: 'aviwe', name: 'Aviwe Mbekeni'}
+    var userData = [{user_name: 'greg', full_name: 'Greg Foulkes'},
+      {user_name: 'aya', full_name: 'Ayabonga Booi'},
+      {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
+      {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
     ]
 
     async function addWeekdays() {
@@ -23,7 +23,7 @@ module.exports = function(pool) {
   }
 
 
-  async function addWaiters(userData) {
+  async function addWaiters() {
 
     for (let user of userData) {
       await pool.query('INSERT INTO waiter (user_name, full_name) VALUES($1, $2)', [user.user_name, user.full_name]);
@@ -48,14 +48,15 @@ module.exports = function(pool) {
 
   async function assignShift(userName, dayName) {
 
+    // for (let shiftData of params){}(
+    //
+    // )
+
     if (userName != '' && dayName != '') {
       let userResult = await pool.query('SELECT id from waiter WHERE user_name=$1', [userName]);
-      //console.log('userResult: ', userResult.rows);
-      //if (userResult.rowcount > 0){
-      let dayResult = await pool.query('SELECT id from weekdays WHERE day_name=$1', [dayName]);
-      //  console.log('dayResult: ',  dayResult.rows);
 
-      //  let userID =
+      let dayResult = await pool.query('SELECT id from weekdays WHERE day_name=$1', [dayName]);
+
       await pool.query('INSERT INTO shifts(waiter_id, weekday_id) VALUES($1, $2)', [userResult.rows[0].id, dayResult.rows[0].id])
       //}
     }
@@ -99,9 +100,19 @@ module.exports = function(pool) {
   }
 
   async function deleteWeekdays() {
-    await pool.query('delete from shifts')
 
-    await pool.query('delete from weekdays')
+    let result = await pool.query('delete from weekdays')
+    return result.rows
+  }
+
+  async function deleteUsers(){
+    let result = await pool.query('delete from waiter')
+    return result.rows
+  }
+
+  async function deleteShifts(){
+    let result = await pool.query('delete from shifts')
+    return result.rows
   }
 
   return {
@@ -111,6 +122,8 @@ module.exports = function(pool) {
     assignShift,
     checkShifts,
     deleteWeekdays,
+    deleteUsers,
+    deleteShifts,
     getWeekdays
   }
 

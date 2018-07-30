@@ -33,65 +33,94 @@ describe('Add Weekdays', function() {
     await waiterApp.addWeekdays()
 
     assert.deepEqual(await waiterApp.getWeekdays(), [
-  { day_name: 'Monday'},
-  { day_name: 'Tuesday'},
-  { day_name: 'Wednesday'},
-  { day_name: 'Thursday'},
-  { day_name: 'Friday'},
-  { day_name: 'Saturday'},
-  { day_name: 'Sunday'}])
+    { day_name: 'Monday'},
+    { day_name: 'Tuesday'},
+    { day_name: 'Wednesday'},
+    { day_name: 'Thursday'},
+    { day_name: 'Friday'},
+    { day_name: 'Saturday'},
+    { day_name: 'Sunday'}])
 
-  //console.log(await waiterApp.addWeekdays())
   });
 
-  it('Should return a list of user names', async function(){
+  it('Should return a list of user names', async function() {
     var waiterApp = WaiterApp(pool);
 
-  //  const waiter = await waiterApp.addWaiter({ username: 'greg', fullName: 'Greg Foulkes', })
-    const waiter = await waiterApp.addWaiter({user_name:'greg', full_name: 'Greg Foulkes'})
+    //  const waiter = await waiterApp.addWaiter({ username: 'greg', fullName: 'Greg Foulkes', })
+    const waiter = await waiterApp.addWaiter({
+      user_name: 'greg',
+      full_name: 'Greg Foulkes'
+    })
 
     assert.deepEqual(waiter, true)
 
-  //console.log(waiter)
+    //console.log(waiter)
 
-});
+  });
 
-it('Should return all the waiters names and usernames', async function(){
-  var waiterApp = WaiterApp(pool);
+  it('Should return all the waiters names and usernames', async function(){
+    var waiterApp = WaiterApp(pool);
 
-  var userData = [{user_name: 'greg', full_name: 'Greg Foulkes'},
-    {user_name: 'aya', full_name: 'Ayabonga Booi'},
-    {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
-    {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
-  ]
+    assert.deepEqual(await waiterApp.addWaiters(), [{user_name: 'greg', full_name: 'Greg Foulkes'},
+      {user_name: 'aya', full_name: 'Ayabonga Booi'},
+      {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
+      {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
+    ])
 
-  assert.deepEqual(await waiterApp.addWaiters(userData), [{user_name: 'greg', full_name: 'Greg Foulkes'},
-    {user_name: 'aya', full_name: 'Ayabonga Booi'},
-    {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
-    {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
-  ])
+    //console.log(await waiterApp.addWaiters(userData))
 
-  //console.log(await waiterApp.addWaiters(userData))
+  });
 
-});
+  it('Should return waiter user_name and shift days', async function(){
 
-it('Should return waiter user_name and shift days', async function(){
+    const waiterApp = WaiterApp(pool);
 
-  const waiterApp = WaiterApp(pool);
+    const userData = [{user_name: 'greg', full_name: 'Greg Foulkes'}]
 
-  const userData = [{user_name: 'greg', full_name: 'Greg Foulkes'}]
+    await waiterApp.addWaiters();
+    await waiterApp.addWeekdays();
 
-  await waiterApp.addWaiters(userData);
-  await waiterApp.addWeekdays();
+    await waiterApp.assignShift('greg', 'Monday');
+    await waiterApp.assignShift('greg', 'Wednesday');
 
-  await waiterApp.assignShift('greg', 'Monday');
-  await waiterApp.assignShift('greg', 'Wednesday');
+    assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg',},
+    {day_name:'Wednesday', user_name:'greg' }
 
-  assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg',},
-  {day_name:'Wednesday', user_name:'greg' }
-])
 
-})
+
+
+    ])
+
+  });
+
+  it ('Should clear all waiters shifts from shifts', async function(){
+    const waiterApp = WaiterApp(pool);
+    await waiterApp.addWeekdays()
+    await waiterApp.addWaiters()
+    console.log()
+    await waiterApp.assignShift('greg', 'Monday')
+    await waiterApp.assignShift('greg', 'Wednesday');
+
+    assert.deepEqual( await waiterApp.deleteShifts(), [])
+
+  })
+
+  it('Should clear all Weekdays from weekdays', async function() {
+    const waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWeekdays();
+
+    assert.deepEqual(await waiterApp.deleteWeekdays(),[])
+  })
+
+  it('Should clear all waiters from waiter', async function() {
+
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWaiters();
+
+    assert.deepEqual(await waiterApp.deleteUsers(), [])
+  });
 
   after(async function() {
     await pool.end();
