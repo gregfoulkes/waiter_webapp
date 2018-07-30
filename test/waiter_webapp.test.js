@@ -18,7 +18,7 @@ const pool = new Pool({
   ssl:useSSL
 })
 
-describe('Add Weekdays', function() {
+describe('Waiter Web App Functions', function() {
 
   beforeEach(async function() {
     await pool.query("delete from shifts");
@@ -43,7 +43,7 @@ describe('Add Weekdays', function() {
 
   });
 
-  it('Should add a waiter user_name and full_name and return a list of user names', async function() {
+  it('Should add 1 waiter user_name and full_name and return a list of user names', async function() {
     var waiterApp = WaiterApp(pool);
 
     //  const waiter = await waiterApp.addWaiter({ username: 'greg', fullName: 'Greg Foulkes', })
@@ -71,7 +71,7 @@ describe('Add Weekdays', function() {
 
   });
 
-  it('Should assign shifts to a user and return the user and the days they are working', async function(){
+  it('Should assign shifts to a user and return the selected user and the days they are working', async function(){
     var waiterApp = WaiterApp(pool);
 
     await waiterApp.addWeekdays();
@@ -82,27 +82,42 @@ describe('Add Weekdays', function() {
 
   })
 
-  it('Should check a user_name and return the waiter user_name and all shift days', async function(){
+  it('Should assign shifts to users and return all users and the days they are working', async function(){
+    var waiterApp = WaiterApp(pool);
 
-    const waiterApp = WaiterApp(pool);
-
-    const userData = [{user_name: 'greg', full_name: 'Greg Foulkes'}]
-
-    await waiterApp.addWaiters();
     await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+    await waiterApp.assignShifts([{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
 
-    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}]);
-    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Wednesday'}]);
+    let checkAll = await waiterApp.checkAllShifts()
 
-    assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg'},
-    {day_name:'Wednesday', user_name:'greg' }
+    //console.log(checkAll)
 
+    assert.deepEqual(checkAll, [{user_name: 'greg', day_name: 'Wednesday'}, {user_name: 'luvuyo', day_name: 'Monday'}])
 
+  })
 
-
-    ])
-
-  });
+  // it('Should check a user_name and return the waiter user_name and all shift days', async function(){
+  //
+  //   const waiterApp = WaiterApp(pool);
+  //
+  //   const userData = [{user_name: 'greg', full_name: 'Greg Foulkes'}]
+  //
+  //   await waiterApp.addWaiters();
+  //   await waiterApp.addWeekdays();
+  //
+  //   await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}]);
+  //   await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Wednesday'}]);
+  //
+  //   assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg'},
+  //   {day_name:'Wednesday', user_name:'greg' }
+  //
+  //
+  //
+  //
+  //   ])
+  //
+  // });
 
   it ('Should clear all waiters shifts from shifts', async function(){
     const waiterApp = WaiterApp(pool);

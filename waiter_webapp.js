@@ -79,8 +79,11 @@ module.exports = function(pool) {
   async function checkAllShifts() {
 
     let poolQuery = await pool.query(`
+      select distinct user_name, day_name from shifts
+      join waiter on waiter.id = shifts.waiter_id
+      join weekdays on weekdays.id = shifts.weekday_id
     `)
-
+    return poolQuery.rows
   }
 
   async function deleteWeekdays() {
@@ -105,6 +108,7 @@ module.exports = function(pool) {
     addWaiters,
     assignShifts,
     checkShifts,
+    checkAllShifts,
     deleteWeekdays,
     deleteUsers,
     deleteShifts,
