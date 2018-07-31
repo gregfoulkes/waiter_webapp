@@ -86,6 +86,13 @@ module.exports = function(pool) {
     return poolQuery.rows
   }
 
+  async function groupShiftsByDay() {
+    if(checkAllShifts()){
+
+    }
+
+  }
+
   async function deleteWeekdays() {
 
     let result = await pool.query('delete from weekdays')

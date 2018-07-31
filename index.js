@@ -67,32 +67,54 @@ const WaiterApp = require('./waiter_webapp.js');
 const Waiter = WaiterApp(pool);
 
 app.get('/', async function(req, res, next){
-  try {
+
   //  await Waiter.addWaiters()
-console.log(await Waiter.addWaiters())
-    res.render('login')
-  } catch (err) {
-    return next()
-  }
+await Waiter.addWeekdays()
+await Waiter.addWaiters()
+res.render('login')
+
 })
-app.post('/waiters', async function(req, res, next) {
-  //await Waiter.addWaiters(userData)
 
+app.post('/login', async function(req, res){
 
-  await Waiter.deleteShifts()
+  res.redirect('/waiters/' + req.body.waiterName)
+})
+
+app.get('/waiters/:waiterName', async function(req, res, next) {
 
   await Waiter.deleteWeekdays()
-
   await Waiter.addWeekdays()
-  try {
 
-    let shiftData = [{user_name: req.params.waiter,
+try{
+    let shiftData = [{user_name: req.params.waiterName,
     day_name: req.body.dayName }]
-  // let waiterName =  req.body.waiter
-  // let dayName = req.body.dayName
+    let days = await Waiter.getWeekdays()
+    console.log(shiftData)
+    res.render('waiter_webapp',{selectDays:days, shiftData} )
 
-//  await Waiter.assignShifts(shiftData)
-    res.render('waiter_webapp',{selectDays:await Waiter.getWeekdays()}  )
+  } catch (err) {
+    return next()
+  }
+});
+
+app.post('/waiters/:username', async function(req, res, next) {
+
+  await Waiter.deleteWeekdays()
+  await Waiter.addWeekdays()
+
+  console.log(username)
+
+  try {
+    let username = req.params.waiterName
+    let days = await Waiter.getWeekdays()
+
+    let shiftData = [{user_name: username,
+    day_name: req.body.dayName }]
+
+    await Waiter.assignShifts(shiftData)
+    let getAllShifts = await Waiter.checkAllShifts()
+
+    res.render('waiter_webapp',{selectDays:days, getAllShifts })
 
   } catch (err) {
     return next()
@@ -100,29 +122,20 @@ app.post('/waiters', async function(req, res, next) {
 
 });
 
-app.post('/waiters/:waiter', async function(req, res, next) {
-  //await Waiter.addWaiters(userData)
 
-  // await Waiter.deleteWeekdays()
-  // await Waiter.deleteShifts()
 
-  let shiftData = [{user_name: req.params.waiter,
-  day_name: req.body.dayName }]
-  //let waiter = req.params.waiterName
-  Waiter.assignShifts(shiftData)
 
-  try{
-    res.render('waiter_webapp',{selectDays:await Waiter.getWeekdays(),
-    waiter}  )
 
+app.get('/days', async function(res, req, next){
+
+  try {
+    let getAllShifts = await Waiter.checkAllShifts()
+
+    res.render('shifts',{getAllShifts})
   } catch (err) {
+
     return next()
   }
-});
-
-
-
-app.get('/days', async function(){
 
 });
 
