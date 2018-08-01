@@ -1,21 +1,20 @@
 module.exports = function(pool) {
 
-    const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    var userData = [{user_name: 'greg', full_name: 'Greg Foulkes'},
+  let userData = [{user_name: 'greg', full_name: 'Greg Foulkes'},
       {user_name: 'aya', full_name: 'Ayabonga Booi'},
       {user_name: 'luvuyo', full_name: 'Luvuyo Sono' },
       {user_name: 'aviwe', full_name: 'Aviwe Mbekeni'}
     ]
 
-    async function addWeekdays() {
-    for (var i = 0; i < WEEKDAYS.length; i++) {
-      await pool.query('INSERT INTO weekdays (day_name) VALUES($1)', [WEEKDAYS[i]])
-    }
+  async function addWeekdays() {
+      for (var i = 0; i < WEEKDAYS.length; i++) {
+        await pool.query('INSERT INTO weekdays (day_name) VALUES($1)', [WEEKDAYS[i]])
+      }
 
-    // let allDays = await pool.query('SELECT day_name from weekdays')
-    // return allDays.rows
-  }
+
+    }
 
   async function getWeekdays() {
     const weekdays = await pool.query("SELECT day_name FROM weekdays");
@@ -59,9 +58,27 @@ module.exports = function(pool) {
       }
       let result = await pool.query('select * from shifts')
       //console.log(result.rows)
-      return result.rows
+      //return result.rows
 
     }
+
+  const selectShift = async (shift) => {
+      const weekdays = shift.day_name;
+      const findUsernameID = await pool.query('SELECT id From waiter WHERE user_name=$1', [shift.user_name]);
+      if (findUsernameID.rowCount > 0) {
+          let userID = findUsernameID.rows[0].id;
+          for (let day of weekdays) {
+              let findDayID = await pool.query('SELECT id From weekdays WHERE day_name=$1', [day]);
+              await pool.query('INSERT INTO shifts (waiter_id, weekday_id) VALUES($1,$2)', [userID, findDayID.rows[0].id]);
+          }
+          console.log(weekdays)
+
+          return true;
+      } else {
+          return false;
+      }
+
+  }
 
 
   async function checkShifts(userName) {
@@ -93,6 +110,33 @@ module.exports = function(pool) {
 
   }
 
+  async function getDaysAndNames() {
+    let assignedShifts = await allShifts();
+    const shiftList = [
+      {id: 0, day: 'Sunday', Waiters: []},
+      {id: 1, day: 'Monday', Waiters: []},
+      {id: 2, day: 'Tuesday', Waiters: []},
+      {id: 3, day: 'Wednesday', Waiters: []},
+      {id: 4, day: 'Thursday', Waiters: []},
+      {id: 5, day: 'Friday', Waiters: []},
+      {id: 7, day: 'Saturday', Waiters: []}
+    ]
+
+       if(assignedShifts.length > 0){
+           //console.log(assignedShifts.length);
+         for (let i = 0; i < assignedShifts.length; i++) {
+            shiftList.forEach(current => {
+                if (current.day === storedShifts[i].dayname) {
+                    current.Waiters.push(storedShifts[i].full_name);
+
+                }
+            })
+         }
+       }
+
+        return shiftArray;
+      }
+
   async function deleteWeekdays() {
 
     let result = await pool.query('delete from weekdays')
@@ -119,7 +163,9 @@ module.exports = function(pool) {
     deleteWeekdays,
     deleteUsers,
     deleteShifts,
-    getWeekdays
+    getWeekdays,
+    getDaysAndNames,
+    selectShift
   }
 
   }

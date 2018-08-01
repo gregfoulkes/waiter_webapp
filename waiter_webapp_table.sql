@@ -2,7 +2,7 @@ drop table if exists waiter CASCADE;
 
 create table waiter (
 	id serial not null primary key,
-  user_name text not null,
+  user_name text not null ,
 	full_name text not null
 );
 
@@ -31,6 +31,10 @@ INSERT INTO weekdays (day_name) VALUES ('Thursday');
 INSERT INTO weekdays (day_name) VALUES ('Friday');
 INSERT INTO weekdays (day_name) VALUES ('Saturday');
 INSERT INTO weekdays (day_name) VALUES ('Sunday');
+
+-- INSERT INTO waiter (user_name, full_name) VALUES('greg', 'Greg Foulkes');
+-- INSERT INTO waiter (user_name, full_name) VALUES('ayabonga', 'Ayabonga Booi');
+-- INSERT INTO waiter (user_name, full_name) VALUES('')
 
 -- INSERT INTO waiter(user_name, name) VALUES('gregfoulkes', 'Greg');
 

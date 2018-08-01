@@ -82,20 +82,22 @@ describe('Waiter Web App Functions', function() {
 
   })
 
-  it('Should assign shifts to users and return all users and the days they are working', async function(){
-    var waiterApp = WaiterApp(pool);
-
-    await waiterApp.addWeekdays();
-    await waiterApp.addWaiters();
-    await waiterApp.assignShifts([{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
-
-    let checkAll = await waiterApp.checkAllShifts()
-
-    //console.log(checkAll)
-
-    assert.deepEqual(checkAll, [{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
-
-  })
+  // it('Should assign shifts to users and return all users and the days they are working', async function(){
+  //   var waiterApp = WaiterApp(pool);
+  //
+  //   await waiterApp.addWeekdays();
+  //   await waiterApp.addWaiters();
+  //   await waiterApp.assignShifts([{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+  //
+  //   let checkAll = await waiterApp.checkAllShifts()
+  //
+  // //  console.log(await waiterApp.checkAllShifts())
+  //
+  //   //console.log(checkAll)
+  //
+  //   assert.deepEqual(checkAll, [{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+  //
+  // })
 
   // it('Should check a user_name and return the waiter user_name and all shift days', async function(){
   //
@@ -147,6 +149,23 @@ describe('Waiter Web App Functions', function() {
     assert.deepEqual(await waiterApp.deleteUsers(), [])
   });
 
+  it('Should Select Shift', async function(){
+
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWaiters();
+
+    await waiterApp.addWeekdays();
+
+    await waiterApp.selectShift([{user_name:'greg', day_name:'Wednesday'}]);
+
+    assert.deepEqual(await waiterApp.checkAllShifts(),[{user_name:'greg', day_name:'Wednesday'}])
+
+//  let x =  await waiterApp.checkAllShifts()
+
+    //console.log(x)
+
+  })
 
   after(async function() {
     await pool.end();

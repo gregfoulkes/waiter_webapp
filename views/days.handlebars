@@ -1,0 +1,43 @@
+<!--
+<div class="ui container">
+    <h1> days </h1>
+
+    <table id="weekdays">
+        <tr>
+                {{#each getAllShifts}}
+                    <th>{{day_name}}</th>
+                {{/each}}
+            </tr>
+            <tr>
+                {{#each getAllShifts}}
+                <td>
+                    {{user_name}}
+                </td>
+                {{/each}}
+            </tr>
+    </table>
+
+<button type="submit" id="clear">clear shifts</button>
+
+</div> -->
+
+<div class="ui container">
+  <table class="ui celled table">
+    <tbody>
+
+      <tr>
+              {{#each getAllShifts}}
+                  <th>{{day_name}}</th>
+              {{/each}}
+          </tr>
+      <tr>
+        {{#each getAllShifts}}
+        <td>
+            {{user_name}}
+        </td>
+        {{/each}}
+      </tr>
+    </tbody>
+  </table>
+
+</div>
