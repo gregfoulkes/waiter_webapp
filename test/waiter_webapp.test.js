@@ -159,11 +159,36 @@ describe('Waiter Web App Functions', function() {
 
     await waiterApp.selectShift([{user_name:'greg', day_name:'Wednesday'}]);
 
-    assert.deepEqual(await waiterApp.checkAllShifts(),[{user_name:'greg', day_name:'Wednesday'}])
+    let checkedAll = await waiterApp.checkAllShifts()
+  //  console.log(checkedAll)
+    assert.deepEqual(checkedAll,[{user_name:'greg', day_name:'Wednesday'}])
 
-//  let x =  await waiterApp.checkAllShifts()
 
-    //console.log(x)
+
+  })
+
+
+  it('Should take return waiter names and days they are working', async function(){
+
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWaiters();
+
+    await waiterApp.addWeekdays();
+
+    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+    let groupedDays = await waiterApp.getDaysAndNames()
+    //console.log(groupedDays)
+
+    assert.deepEqual(groupedDays,[
+      {id: 0, day: 'Sunday', Waiters: []},
+      {id: 1, day: 'Monday', Waiters: ['Greg Foulkes']},
+      {id: 2, day: 'Tuesday', Waiters: []},
+      {id: 3, day: 'Wednesday', Waiters: ['Greg Foulkes']},
+      {id: 4, day: 'Thursday', Waiters: []},
+      {id: 5, day: 'Friday', Waiters: []},
+      {id: 7, day: 'Saturday', Waiters: []}
+    ])
 
   })
 

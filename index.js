@@ -107,7 +107,7 @@ app.post('/waiters/:username', async function(req, res, next) {
     }]
 
     await Waiter.selectShift(shiftData)
-  //  console.log(shiftData)
+   console.log(shiftData)
 
     res.render('waiter_webapp', {
       days: getDays,
@@ -123,11 +123,25 @@ app.post('/waiters/:username', async function(req, res, next) {
   app.get('/days', async function(req, res, next) {
 
     try {
-      let getAllShifts = await Waiter.checkAllShifts()
-      res.render('days', {getAllShifts})
+      //let getAllShifts = await Waiter.checkAllShifts()
+      let getDays = await Waiter.getWeekdays()
+      let getAllShifts = await Waiter.getDaysAndNames()
+      res.render('days', {getAllShifts, getDays})
     } catch (err) {
 
       return next(err)
     }
 
   });
+
+  app.get('/clear', async function(req, res, next){
+
+    try {
+       await Waiter.deleteShifts()
+       res.render('days')
+
+    } catch (err) {
+      return next(err)
+    }
+
+  })

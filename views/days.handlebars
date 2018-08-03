@@ -1,27 +1,63 @@
-<!--
-<div class="ui container">
-    <h1> days </h1>
-
-    <table id="weekdays">
-        <tr>
-                {{#each getAllShifts}}
-                    <th>{{day_name}}</th>
-                {{/each}}
-            </tr>
-            <tr>
-                {{#each getAllShifts}}
-                <td>
-                    {{user_name}}
-                </td>
-                {{/each}}
-            </tr>
-    </table>
-
-<button type="submit" id="clear">clear shifts</button>
-
-</div> -->
+<div class="ui one column grid">
+  <div class="column">
+    <div class="ui segment">
+      <h1 class="ui center aligned header">
+        Shifts
+        <div class="sub header">Waiters have been assigned the following shifts </div>
+      </h1>
+    </div>
+  </div>
+</div>
 
 <div class="ui container">
+  <div class="ui six column centered grid">
+
+    <div class="column">
+      <table class="ui very basic collapsing celled table">
+        <thead>
+          <tr><th>Employee</th>
+          <th>Shifts</th>
+        </tr></thead>
+        <tbody>
+
+          <tr>
+            {{#each getAllShifts}}
+
+            <td>
+              <h4 class="ui image header">
+                <div class="content">
+
+              {{full_name}}
+                  </div>
+
+              </div>
+            </h4></td>
+            {{/each}}
+
+            {{#each getDays}}
+
+            <td>
+
+              {{day_name}}
+            </td>
+            {{/each}}
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+  <div class="">
+    <a href="/clear"><button class="ui button" type="submit" >clear shifts</button></a>
+
+  </div>
+
+
+
+
+<!-- <div class="ui container">
   <table class="ui celled table">
     <tbody>
 
@@ -39,5 +75,6 @@
       </tr>
     </tbody>
   </table>
+  <button class="ui button" type="submit" id="clear">clear shifts</button>
 
-</div>
+</div> -->

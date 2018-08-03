@@ -14,46 +14,27 @@
   <form class="" action="/waiters/{{username}}" method="post">
 
     <div class="ui seven column centered grid">
-<div class="row">
-  <!-- {{#each days}}
-  <div class="column">
-    <div class="ui action input">
-      <input type="checkbox" name="dayName" value="{{day_name}}"><a class="ui basic large label">{{day_name}}</a>
-    </div>
-  </div>
-  {{/each}} -->
+      <div class="row">
 
-  {{#each days}}
+        {{#each days}}
 
-  <!-- <div class="ui form">
-    <div class="inline field"> -->
-    <div class="column">
+          <div class="column">
 
-      <div class="ui checkbox">
-    <input type="checkbox" name="example">
-    <label>{{day_name}}</label>
-  </div>
-    </div>
+            <div class="ui checkbox">
+              <input type="checkbox" name="example">
+              <label>{{day_name}}</label>
+            </div>
+          </div>
 
-    <!-- </div>
-  </div> -->
-
-  {{/each}}
+        {{/each}}
       </div>
 
-
-  <div class="column">
-    <button class="ui button" type="submit">Submit</button>
-  </div>
-</div>
-
-
-
-
+      <div class="column">
+        <button class="ui button" type="submit">Submit</button>
+      </div>
+    </div>
 
 </div>
 </form>
-
-
 
 </div>

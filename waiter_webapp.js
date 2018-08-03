@@ -71,7 +71,7 @@ module.exports = function(pool) {
               let findDayID = await pool.query('SELECT id From weekdays WHERE day_name=$1', [day]);
               await pool.query('INSERT INTO shifts (waiter_id, weekday_id) VALUES($1,$2)', [userID, findDayID.rows[0].id]);
           }
-          console.log(weekdays)
+        //  console.log(weekdays)
 
           return true;
       } else {
@@ -94,14 +94,25 @@ module.exports = function(pool) {
   }
 
   async function checkAllShifts() {
-
     let poolQuery = await pool.query(`
-      select distinct user_name, day_name from shifts
+      select distinct user_name,full_name, day_name from shifts
       join waiter on waiter.id = shifts.waiter_id
       join weekdays on weekdays.id = shifts.weekday_id
     `)
+    console.log(poolquery.rows)
+
     return poolQuery.rows
   }
+  //
+  // async function checkAllShifts() {
+  //
+  //   let poolQuery = await pool.query(`
+  //     select distinct full_name, day_name from shifts
+  //     join waiter on waiter.id = shifts.waiter_id
+  //     join weekdays on weekdays.id = shifts.weekday_id
+  //   `)
+  //   return poolQuery.rows
+  // }
 
   async function groupShiftsByDay() {
     if(checkAllShifts()){
@@ -111,8 +122,9 @@ module.exports = function(pool) {
   }
 
   async function getDaysAndNames() {
-    let assignedShifts = await allShifts();
-    const shiftList = [
+    let assignedShifts = await checkAllShifts();
+
+     const shiftList = [
       {id: 0, day: 'Sunday', Waiters: []},
       {id: 1, day: 'Monday', Waiters: []},
       {id: 2, day: 'Tuesday', Waiters: []},
@@ -126,15 +138,15 @@ module.exports = function(pool) {
            //console.log(assignedShifts.length);
          for (let i = 0; i < assignedShifts.length; i++) {
             shiftList.forEach(current => {
-                if (current.day === storedShifts[i].dayname) {
-                    current.Waiters.push(storedShifts[i].full_name);
+                if (current.day === assignedShifts[i].day_name) {
+                    current.Waiters.push(assignedShifts[i].full_name);
 
                 }
             })
          }
        }
 
-        return shiftArray;
+        return shiftList;
       }
 
   async function deleteWeekdays() {
