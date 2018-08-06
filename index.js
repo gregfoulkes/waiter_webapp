@@ -8,7 +8,6 @@ var app = express();
 let flash = require('express-flash');
 let session = require('express-session');
 
-
 //setup middleware
 var bodyParser = require('body-parser');
 

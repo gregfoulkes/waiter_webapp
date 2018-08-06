@@ -21,6 +21,7 @@
     "semantic-ui": "^2.3.3"
   },
   "devDependencies": {
+    "eslint": "^5.2.0",
     "mocha": "^5.2.0"
   }
 }
