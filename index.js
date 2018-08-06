@@ -67,8 +67,6 @@ const Waiter = WaiterApp(pool);
 
 app.get('/', async function(req, res, next) {
 
-  //  await Waiter.addWaiters()
-  //await Waiter.addWeekdays()
   await Waiter.addWaiters()
   res.render('login')
 
@@ -100,13 +98,11 @@ app.post('/waiters/:username', async function(req, res, next) {
     let name = req.params.username
     let getDays = await Waiter.getWeekdays()
 
-    let shiftData = [{
+    let shiftData = {
       user_name: name,
-      day_name: Array.isArray(req.body.dayName) ? req.body.dayName : [req.body.dayName]
-    }]
-
+      day_names: Array.isArray(req.body.dayName) ? req.body.dayName : [req.body.dayName]
+    };
     await Waiter.selectShift(shiftData)
-   console.log(shiftData)
 
     res.render('waiter_webapp', {
       days: getDays,
@@ -114,7 +110,7 @@ app.post('/waiters/:username', async function(req, res, next) {
     })
 
   } catch (err) {
-    return next()
+    return next(err)
   }
 
 });
@@ -123,9 +119,10 @@ app.post('/waiters/:username', async function(req, res, next) {
 
     try {
       //let getAllShifts = await Waiter.checkAllShifts()
-      let getDays = await Waiter.getWeekdays()
-      let getAllShifts = await Waiter.getDaysAndNames()
-      res.render('days', {getAllShifts, getDays})
+     // let getDays = await Waiter.getWeekdays()
+      let shifts = await Waiter.getDaysAndNames()
+      console.log('new query' + shifts)
+      res.render('days', {shifts})
     } catch (err) {
 
       return next(err)
@@ -136,8 +133,9 @@ app.post('/waiters/:username', async function(req, res, next) {
   app.get('/clear', async function(req, res, next){
 
     try {
+      //let getDays = await Waiter.getWeekdays()
        await Waiter.deleteShifts()
-       res.render('days')
+       res.redirect('/days')
 
     } catch (err) {
       return next(err)

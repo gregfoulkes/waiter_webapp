@@ -9,72 +9,25 @@
   </div>
 </div>
 
-<div class="ui container">
-  <div class="ui six column centered grid">
+  <div class = "ui center aligned eight column grid">
+  <div class="row">
+    {{#each shifts}}
 
-    <div class="column">
-      <table class="ui very basic collapsing celled table">
-        <thead>
-          <tr><th>Employee</th>
-          <th>Shifts</th>
-        </tr></thead>
-        <tbody>
-
-          <tr>
-            {{#each getAllShifts}}
-
-            <td>
-              <h4 class="ui image header">
-                <div class="content">
-
-              {{full_name}}
-                  </div>
-
-              </div>
-            </h4></td>
-            {{/each}}
-
-            {{#each getDays}}
-
-            <td>
-
-              {{day_name}}
-            </td>
-            {{/each}}
-          </tr>
-
-        </tbody>
-      </table>
+    <div class="column {{color}}">
+      <div class="ui vertical fluid menu">
+        <div class="header item ">
+          {{day}}
+        </div>
+        {{#each Waiters}}
+        <div class="item">
+          {{this}}
+        </div>
+        {{/each}}
+      </div>
 
     </div>
-
-  </div>
-  <div class="">
-    <a href="/clear"><button class="ui button" type="submit" >clear shifts</button></a>
+    {{/each}}
 
   </div>
 
-
-
-
-<!-- <div class="ui container">
-  <table class="ui celled table">
-    <tbody>
-
-      <tr>
-              {{#each getAllShifts}}
-                  <th>{{day_name}}</th>
-              {{/each}}
-          </tr>
-      <tr>
-        {{#each getAllShifts}}
-        <td>
-            {{user_name}}
-        </td>
-        {{/each}}
-      </tr>
-    </tbody>
-  </table>
-  <button class="ui button" type="submit" id="clear">clear shifts</button>
-
-</div> -->
+</div>

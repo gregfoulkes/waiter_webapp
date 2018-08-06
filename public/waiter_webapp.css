@@ -7,6 +7,13 @@ html, body {
     margin: 0px;
 }
 
+.green {
+    color: green;
+}
+
+.blue {
+    background-color: orange;
+}
 .container {
     max-width: 960px;
     height: 100vh;

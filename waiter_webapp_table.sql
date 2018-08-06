@@ -32,9 +32,11 @@ INSERT INTO weekdays (day_name) VALUES ('Friday');
 INSERT INTO weekdays (day_name) VALUES ('Saturday');
 INSERT INTO weekdays (day_name) VALUES ('Sunday');
 
--- INSERT INTO waiter (user_name, full_name) VALUES('greg', 'Greg Foulkes');
--- INSERT INTO waiter (user_name, full_name) VALUES('ayabonga', 'Ayabonga Booi');
--- INSERT INTO waiter (user_name, full_name) VALUES('')
+INSERT INTO waiter (user_name, full_name) VALUES('greg', 'Greg Foulkes');
+INSERT INTO waiter (user_name, full_name) VALUES('ayabonga', 'Ayabonga Booi');
+INSERT INTO waiter (user_name, full_name) VALUES('luvuyo', 'Luvuyo Sono');
+INSERT INTO waiter (user_name, full_name) VALUES('aviwe', 'Aviwe Mbekeni');
+
 
 -- INSERT INTO waiter(user_name, name) VALUES('gregfoulkes', 'Greg');
 
