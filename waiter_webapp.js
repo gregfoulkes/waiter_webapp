@@ -211,7 +211,7 @@ module.exports = function (pool) {
       })
 
     }
-    console.log(storedDays.rows)
+   // console.log(storedDays.rows)
     return storedDays.rows
   }
 
