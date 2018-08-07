@@ -65,42 +65,18 @@ app.set('view engine', 'handlebars');
 const WaiterApp = require('./waiter_webapp.js');
 const Waiter = WaiterApp(pool);
 
-app.get('/', async function(req, res, next) {
-let days = await Waiter.getWeekdays()
+app.get('/', async function (req, res, next) {
+  let days = await Waiter.getWeekdays()
   await Waiter.addWaiters()
-  res.render('waiter_webapp', {days})
-
+  res.render('waiter_webapp', {
+    days
+  })
 })
 
-
-// app.post('/login', async function(req, res, next) {
-
-//   let name = req.body.waiterName
-
-//   try {
-//     if(name === "admin"){
-//       res.redirect('/days')
-//     } else{ 
-//       res.redirect('/waiters/' + name )
-//     }
-    
-//   } catch (error) {
-//     return next(err)
-//   }
-
-// })
-
-app.post('/login', async function(req, res, next) {
-
-  let name = req.body.waiterName
-
-      res.redirect('/waiters/' + name )
-
-})
 app.get('/waiters/:username', async function(req, res, next) {
 
   let username = req.params.username
-  
+
   try {
     res.render('waiter_webapp', {
       days: await Waiter.getWeekdays(),
@@ -138,10 +114,7 @@ app.post('/waiters/:username', async function(req, res, next) {
   app.get('/days', async function(req, res, next) {
 
     try {
-      //let getAllShifts = await Waiter.checkAllShifts()
-     // let getDays = await Waiter.getWeekdays()
       let shifts = await Waiter.getDaysAndNames()
-      console.log('new query' + shifts)
       res.render('days', {shifts})
     } catch (err) {
 

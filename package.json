@@ -7,6 +7,9 @@
     "test": "mocha",
     "start": "node index.js"
   },
+  "engines": {
+    "node": "8.9.4"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
