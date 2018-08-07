@@ -14,22 +14,25 @@
 
 <div class="ui container">
 
-  <form class="" action="/waiters/{{username}}" method="post">
+  <form class="" action="/waiters/{{username}}"  method="post">
 
     <div class="ui seven column centered grid">
       <div class="row">
-
+        {{!-- {{#each foundUser}} --}}
         {{#each days}}
 
           <div class="column">
 
             <div class="ui checkbox">
-              <input type="checkbox" name="dayName" value='{{day_name}}'>
+              <input type="checkbox" name="dayName" 
+              {{checkedDays}} 
+              value='{{day_name}}'>
               <label>{{day_name}}</label>
             </div>
           </div>
 
         {{/each}}
+        {{!-- {{/each}} --}}
       </div>
   <div class="column">
         <button class="ui button" type="submit">Submit</button>
@@ -37,10 +40,10 @@
       </div>
      
       
-     <div class="column">
+     {{!-- <div class="column">
       <a href="/"><i class="sign out alternate icon">Sign Out</i></a>                            
 
-      </div>
+      </div> --}}
 
 
 </div>

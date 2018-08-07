@@ -157,16 +157,11 @@ describe('Waiter Web App Functions', function() {
 
     await waiterApp.addWeekdays();
 
-    await waiterApp.selectShift({user_name:'greg', day_name:['Wednesday', 'Thursday']});
+    await waiterApp.selectShift({user_name:'greg', day_names:['Wednesday', 'Thursday']});
 
     let checkedAll = await waiterApp.checkAllShifts()
-  //  console.log(checkedAll)
-    assert.deepEqual(checkedAll,[{day_name:'Thursday', user_name:'greg', full_name:'Greg Foulkes' },
-    {day_name:'Wednesday', user_name:'greg', full_name:'Greg Foulkes' }])
-
-
-
-     })
+    assert.deepEqual(checkedAll,[{user_name:'greg', full_name:'Greg Foulkes', day_name:'Thursday'}, 
+    { user_name:'greg', full_name:'Greg Foulkes',day_name:'Wednesday'}])})
 
 
   it('Should take return waiter names and days they are working', async function(){
@@ -177,7 +172,7 @@ describe('Waiter Web App Functions', function() {
 
     await waiterApp.addWeekdays();
 
-    await waiterApp.selectShift({user_name: 'greg', day_name:[ 'Monday', 'Wednesday']})
+    await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Wednesday']})
     let groupedDays = await waiterApp.getDaysAndNames()
     //console.log(groupedDays)
 
@@ -190,6 +185,28 @@ describe('Waiter Web App Functions', function() {
       {id: 5, day: 'Friday', Waiters: []},
       {id: 7, day: 'Saturday', Waiters: []}
     ])
+
+  })
+
+  it('Should return check values as true', async function(){
+
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWaiters();
+
+    await waiterApp.addWeekdays();
+
+    let select = await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Wednesday']})
+
+
+    assert.deepEqual(await waiterApp.returnChecked("greg"), [{day_name: 'Monday', checked: true},
+    {day_name: 'Tuesday'},
+    {day_name: 'Wednesday', checked: true},
+    {day_name: 'Thursday'},
+    {day_name: 'Friday'},
+    {day_name: 'Saturday'},
+    {day_name: 'Sunday'},
+  ])
 
   })
 

@@ -195,6 +195,26 @@ module.exports = function (pool) {
   async function addClass() {
 
   }
+
+  async function returnChecked(userName) {
+    let storedDays = await pool.query('select day_name from weekdays');
+    let storedShifts = await checkShifts(userName);
+    for (let i = 0; i < storedDays.rowCount; i++) {
+      let days = storedDays.rows[i];
+     // console.log(days)
+      storedShifts.forEach(shift => {
+        let matchedDay = shift.day_name;
+        //console.log(found)
+        if (days.day_name === matchedDay) {
+          days.checked = true
+        }
+      })
+
+    }
+    console.log(storedDays.rows)
+    return storedDays.rows
+  }
+
   return {
     addWeekdays,
     addWaiter,
@@ -207,7 +227,8 @@ module.exports = function (pool) {
     deleteShifts,
     getWeekdays,
     getDaysAndNames,
-    selectShift
+    selectShift,
+    returnChecked
   }
 
 }

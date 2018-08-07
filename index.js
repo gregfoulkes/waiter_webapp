@@ -55,6 +55,12 @@ app.listen(PORT, function() {
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main',
+  helpers: {
+    checkedDays: function () {
+        if (this.checked) {
+            return 'checked';
+        }
+    }}
 
 }));
 
@@ -78,12 +84,15 @@ app.get('/waiters/:username', async function(req, res, next) {
   let username = req.params.username
 
   try {
+    let foundUser  = await Waiter.returnChecked(username);
+    console.log(foundUser)
     res.render('waiter_webapp', {
       days: await Waiter.getWeekdays(),
-      username
+      username,
+      foundUser
     })
   } catch (err) {
-    return next()
+    return next(err)
   }
 });
 
