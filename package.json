@@ -19,11 +19,9 @@
     "express-flash": "0.0.2",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
-    // "gulp-clone": "1.0.0",
-    // "gulp-header": "^1.8.2",
+ 
     "pg": "^7.4.3",
     "save": "^2.3.2",
-    // "semantic-ui": "^2.3.3"
   },
   "devDependencies": {
     "eslint": "^5.2.0",
