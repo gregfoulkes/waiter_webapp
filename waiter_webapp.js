@@ -28,9 +28,21 @@ module.exports = function (pool) {
 
   }
 
-  async function getWeekdays() {
-    const weekdays = await pool.query("SELECT day_name FROM weekdays");
-    return weekdays.rows;
+  async function getWeekdays(username) {
+    let storedDays = await pool.query('select day_name from weekdays');
+    let storedShifts = await checkShifts(username);
+    for (let i = 0; i < storedDays.rowCount; i++) {
+      let days = storedDays.rows[i];
+      storedShifts.forEach(shift => {
+        let matchedDay = shift.day_name;
+        if (days.day_name === matchedDay) {
+          days.checked = 'checked'
+        }
+      })
+
+    }
+   // console.log(storedDays.rows)
+    return storedDays.rows
   }
 
   async function addWaiters() {

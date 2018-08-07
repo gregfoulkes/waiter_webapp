@@ -55,12 +55,12 @@ app.listen(PORT, function() {
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main',
-  helpers: {
-    checkedDays: function () {
-        if (this.checked) {
-            return 'checked';
-        }
-    }}
+  // helpers: {
+  //   checkedDays: function () {
+  //       if (this.checked) {
+  //           return "checked";
+  //       }
+  //   }}
 
 }));
 
@@ -72,11 +72,15 @@ const WaiterApp = require('./waiter_webapp.js');
 const Waiter = WaiterApp(pool);
 
 app.get('/', async function (req, res, next) {
-  let days = await Waiter.getWeekdays()
-  await Waiter.addWaiters()
-  res.render('waiter_webapp', {
-    days
-  })
+  res.render('login')
+})
+
+app.post('/login', async function(req, res, next) {
+
+  let name = req.body.waiterName
+
+      res.redirect('/waiters/' + name )
+
 })
 
 app.get('/waiters/:username', async function(req, res, next) {
@@ -84,12 +88,12 @@ app.get('/waiters/:username', async function(req, res, next) {
   let username = req.params.username
 
   try {
-    let foundUser  = await Waiter.returnChecked(username);
-    console.log(foundUser)
+    //let foundUser  = await Waiter.returnChecked(username);
+    //console.log(foundUser)
     res.render('waiter_webapp', {
-      days: await Waiter.getWeekdays(),
+      days: await Waiter.getWeekdays(username),
       username,
-      foundUser
+      
     })
   } catch (err) {
     return next(err)
@@ -101,7 +105,10 @@ app.post('/waiters/:username', async function(req, res, next) {
 
   try {
     let name = req.params.username
-    let getDays = await Waiter.getWeekdays()
+
+    let foundUser  = await Waiter.returnChecked(name);
+
+    let getDays = await Waiter.getWeekdays(name)
 
     let shiftData = {
       user_name: name,
@@ -111,7 +118,8 @@ app.post('/waiters/:username', async function(req, res, next) {
 
     res.render('waiter_webapp', {
       days: getDays,
-      username:name
+      username:name,
+      
     })
 
   } catch (err) {
