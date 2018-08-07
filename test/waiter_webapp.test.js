@@ -160,8 +160,8 @@ describe('Waiter Web App Functions', function() {
     await waiterApp.selectShift({user_name:'greg', day_names:['Wednesday', 'Thursday']});
 
     let checkedAll = await waiterApp.checkAllShifts()
-    assert.deepEqual(checkedAll,[{user_name:'greg', full_name:'Greg Foulkes', day_name:'Thursday'}, 
-    { user_name:'greg', full_name:'Greg Foulkes',day_name:'Wednesday'}])})
+    assert.deepEqual(checkedAll,[{user_name:'greg', full_name:'Greg Foulkes', day_name:'Wednesday'}, 
+    { user_name:'greg', full_name:'Greg Foulkes',day_name:'Thursday'}])})
 
 
   it('Should take return waiter names and days they are working', async function(){
