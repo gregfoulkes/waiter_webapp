@@ -199,9 +199,9 @@ describe('Waiter Web App Functions', function() {
     let select = await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Wednesday']})
 
 
-    assert.deepEqual(await waiterApp.getWeekdays("greg"), [{day_name: 'Monday', checked: true},
+    assert.deepEqual(await waiterApp.getWeekdays("greg"), [{day_name: 'Monday', checked: 'checked'},
     {day_name: 'Tuesday'},
-    {day_name: 'Wednesday', checked: true},
+    {day_name: 'Wednesday', checked: 'checked'},
     {day_name: 'Thursday'},
     {day_name: 'Friday'},
     {day_name: 'Saturday'},
