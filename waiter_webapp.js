@@ -209,23 +209,24 @@ module.exports = function (pool) {
   }
 
   async function returnChecked(userName) {
-    let storedDays = await pool.query('select day_name from weekdays');
-    let storedShifts = await checkShifts(userName);
-    for (let i = 0; i < storedDays.rowCount; i++) {
-      let days = storedDays.rows[i];
+    let storedWaiters = await pool.query('select user_name,full_name from waiter');
+   // let storedShifts = await checkShifts(userName);
+    for (let i = 0; i < storedWaiters.rowCount; i++) {
+      let waiter = storedWaiters.rows[i];
      // console.log(days)
-      storedShifts.forEach(shift => {
-        let matchedDay = shift.day_name;
+      //storedShifts.forEach(shift => {
+       // let matchedDay = shift.day_name;
         //console.log(found)
-        if (days.day_name === matchedDay) {
-          days.checked = true
+        if (waiter.user_name === userName) {
+          return waiter.full_name
+          //days.checked = true
         }
-      })
+      }
 
     }
    // console.log(storedDays.rows)
-    return storedDays.rows
-  }
+    //return storedDays.rows
+
 
   return {
     addWeekdays,

@@ -88,11 +88,12 @@ app.get('/waiters/:username', async function(req, res, next) {
   let username = req.params.username
 
   try {
-    //let foundUser  = await Waiter.returnChecked(username);
+    let foundUser  = await Waiter.returnChecked(username);
     //console.log(foundUser)
     res.render('waiter_webapp', {
       days: await Waiter.getWeekdays(username),
       username,
+      foundUser
       
     })
   } catch (err) {
@@ -116,11 +117,13 @@ app.post('/waiters/:username', async function(req, res, next) {
     };
     await Waiter.selectShift(shiftData)
 
-    res.render('waiter_webapp', {
-      days: getDays,
-      username:name,
+    // res.render('waiter_webapp', {
+    //   days: getDays,
+    //   username:name,
       
-    })
+    // })
+
+    res.redirect('/waiters/'+req.params.username);
 
   } catch (err) {
     return next(err)
