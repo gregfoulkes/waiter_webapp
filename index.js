@@ -47,7 +47,7 @@ const pool = new Pool({
 
 let PORT = process.env.PORT || 5008;
 
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log('App starting on port', PORT);
 });
 
@@ -55,13 +55,15 @@ app.listen(PORT, function() {
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main',
-  // helpers: {
-  //   checkedDays: function () {
-  //       if (this.checked) {
-  //           return "checked";
-  //       }
-  //   }}
-
+  helpers: {
+    flashMessage: function () {
+      if (this.messages.info == "Shift(s) successfully added!") {
+        return "success";
+      } else {
+        return "failure";
+      }
+    }
+  }
 }));
 
 app.set('view engine', 'handlebars');
@@ -75,39 +77,48 @@ app.get('/', async function (req, res, next) {
   res.render('login')
 })
 
-app.post('/login', async function(req, res, next) {
+app.post('/login', async function (req, res, next) {
 
-  let name = req.body.waiterName
+  try {
+    let name = req.body.waiterName
 
-      res.redirect('/waiters/' + name )
+    res.redirect('/waiters/' + name)
+    
+  } catch (err) {
+    return next(err)
+  }
+
+
 
 })
 
-app.get('/waiters/:username', async function(req, res, next) {
+app.get('/waiters/:username', async function (req, res, next) {
 
   let username = req.params.username
 
   try {
-    let foundUser  = await Waiter.returnChecked(username);
+    let foundUser = await Waiter.returnChecked(username);
     //console.log(foundUser)
     res.render('waiter_webapp', {
       days: await Waiter.getWeekdays(username),
       username,
       foundUser
-      
+
     })
   } catch (err) {
     return next(err)
   }
 });
 
-app.post('/waiters/:username', async function(req, res, next) {
+app.post('/waiters/:username', async function (req, res, next) {
 
+  let name = req.params.username
 
   try {
-    let name = req.params.username
 
-    let foundUser  = await Waiter.returnChecked(name);
+    if(name){
+
+    let foundUser = await Waiter.returnChecked(name);
 
     let getDays = await Waiter.getWeekdays(name)
 
@@ -115,15 +126,15 @@ app.post('/waiters/:username', async function(req, res, next) {
       user_name: name,
       day_names: Array.isArray(req.body.dayName) ? req.body.dayName : [req.body.dayName]
     };
-    await Waiter.selectShift(shiftData)
+    let added = await Waiter.selectShift(shiftData)
 
-    // res.render('waiter_webapp', {
-    //   days: getDays,
-    //   username:name,
-      
-    // })
+    if(added){
+      req.flash('info', 'succesfully added shift(s)')
+    }
 
-    res.redirect('/waiters/'+req.params.username);
+    }
+
+    res.redirect('/waiters/' + req.params.username);
 
   } catch (err) {
     return next(err)
@@ -131,27 +142,29 @@ app.post('/waiters/:username', async function(req, res, next) {
 
 });
 
-  app.get('/days', async function(req, res, next) {
+app.get('/days', async function (req, res, next) {
 
-    try {
-      let shifts = await Waiter.getDaysAndNames()
-      res.render('days', {shifts})
-    } catch (err) {
+  try {
+    let shifts = await Waiter.getDaysAndNames()
+    res.render('days', {
+      shifts
+    })
+  } catch (err) {
 
-      return next(err)
-    }
+    return next(err)
+  }
 
-  });
+});
 
-  app.get('/clear', async function(req, res, next){
+app.get('/clear', async function (req, res, next) {
 
-    try {
-      //let getDays = await Waiter.getWeekdays()
-       await Waiter.deleteShifts()
-       res.redirect('/days')
+  try {
+    //let getDays = await Waiter.getWeekdays()
+    await Waiter.deleteShifts()
+    res.redirect('/days')
 
-    } catch (err) {
-      return next(err)
-    }
+  } catch (err) {
+    return next(err)
+  }
 
-  })
+})
