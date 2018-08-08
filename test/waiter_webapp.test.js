@@ -188,7 +188,7 @@ describe('Waiter Web App Functions', function() {
 
   })
 
-  it('Should return check values as true', async function(){
+  it('Should return check values as checked', async function(){
 
     var waiterApp = WaiterApp(pool);
 
