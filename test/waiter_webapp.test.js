@@ -136,7 +136,6 @@ describe('Waiter Web App Functions', function() {
 
     await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Wednesday']})
     let groupedDays = await waiterApp.getDaysAndNames()
-    //console.log(groupedDays)
 
     assert.deepEqual(groupedDays,[
       {id: 0, day: 'Sunday', Waiters: []},
@@ -176,21 +175,21 @@ describe('Waiter Web App Functions', function() {
     var waiterApp = WaiterApp(pool);
 
     const waiter = await waiterApp.addWaiter({
-      user_name: 'greg',
-      full_name: 'Greg Foulkes'
+      user_name: 'anele',
+      full_name: 'Anele Tom'
     })
 
     await waiterApp.addWeekdays();
     
-    assert.equal(await waiterApp.checkWaiter('greg'), true)
+    assert.equal(await waiterApp.checkWaiter('anele'), true)
   })
 
   it('Should return false if username does not exist', async function(){
     var waiterApp = WaiterApp(pool);
 
     const waiter = await waiterApp.addWaiter({
-      user_name: 'greg',
-      full_name: 'Greg Foulkes'
+      user_name: 'anele',
+      full_name: 'Anele Tom'
     })
 
     await waiterApp.addWeekdays();
@@ -203,9 +202,44 @@ describe('Waiter Web App Functions', function() {
 
     await waiterApp.addWeekdays();
     await waiterApp.addWaiters();
-    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+    await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Wednesday']})
+    await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Friday']})
 
-    await waiterApp.updateShifts('greg');
+    //await waiterApp.selectShift('greg');
+
+    //assert.deepEqual(await waiterApp.checkShifts('greg'), [{user_name: 'greg', day_name: 'Tuesday' },{user_name: 'greg', day_name: 'Friday'}])
+   // await waiterApp.selectShift({user_name: 'greg', day_names:[ 'Monday', 'Wednesday']})
+    let groupedDays = await waiterApp.getDaysAndNames()
+
+    assert.deepEqual(groupedDays,[
+      {id: 0, day: 'Sunday', Waiters: []},
+      {id: 1, day: 'Monday', Waiters: ['Greg Foulkes']},
+      {id: 2, day: 'Tuesday', Waiters: []},
+      {id: 3, day: 'Wednesday', Waiters: []},
+      {id: 4, day: 'Thursday', Waiters: []},
+      {id: 5, day: 'Friday', Waiters: ['Greg Foulkes']},
+      {id: 7, day: 'Saturday', Waiters: []}
+    ])
+
+  
+  })
+
+  it('Should check a users access privileges and return true', async function(){
+    var waiterApp = WaiterApp(pool);
+    await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+
+    assert.equal(await waiterApp.checkPrivelege('greg', true))
+
+
+  })
+
+  it('Should check a users access privileges and return false', async function(){
+    var waiterApp = WaiterApp(pool);
+    await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+
+    assert.equal(await waiterApp.checkPrivelege('aviwe', false))
 
   })
 

@@ -43,14 +43,6 @@ const pool = new Pool({
   ssl: useSSL
 })
 
-//start the server
-
-let PORT = process.env.PORT || 5008;
-
-app.listen(PORT, function () {
-  console.log('App starting on port', PORT);
-});
-
 //Handlebars setup
 
 app.engine('handlebars', exphbs({
@@ -70,6 +62,23 @@ app.set('view engine', 'handlebars');
 
 //call factory function
 
+
+app.use(function(req, res, next){
+
+
+
+  // if ( (req.path === '/' || req.path === 'login')) {
+  //   return next();
+  // }  
+  
+  // if(!req.session.user_name) {
+  //   req.flash('register', 'Please login')
+  //   return res.redirect('/');
+  // }
+  next();
+
+});
+
 const WaiterApp = require('./waiter_webapp.js');
 const Waiter = WaiterApp(pool);
 
@@ -83,15 +92,18 @@ app.post('/login', async function (req, res, next) {
 
 let checkName = await Waiter.checkWaiter(name)
 
-console.log(checkName)
+//console.log(checkName)
   try {
     if(checkName){
-      res.redirect('/waiters/' + name)
+      //
+      req.session.user_name = name;
+      return res.redirect('/waiters/' + name)
 
-    }if(checkName == false){
-      req.flash('register', 'Please register your name')
-      res.redirect('/')
-
+    }
+    
+    if(checkName == false){
+      req.flash('register', 'Please register your name');
+      return res.redirect('/');
     }
 
     // if()
@@ -144,21 +156,22 @@ app.post('/register', async function (req, res, next){
 
         }
         //req.flash('invalid', 'Please Enter a User Name')
-      
-
-      
-
-    
-
- 
-
   } catch (err) {
     return next(err)
   }
 
 })
 
-app.get('/waiters/:username', async function (req, res, next) {
+function checkAccess(req, res, next) {
+  if (req.session.user_name !== req.params.username) {
+    req.flash('errors', 'Access denied');
+    return res.redirect('/');
+  }
+  next();
+}
+
+
+app.get('/waiters/:username', checkAccess, async function (req, res, next) {
 
   let username = req.params.username
 
@@ -208,7 +221,14 @@ app.post('/waiters/:username', async function (req, res, next) {
 
 });
 
+app.get('/signout', function(req, res) {
+  delete req.session.user_name;
+  res.redirect('/');
+});
+
 app.get('/days', async function (req, res, next) {
+
+ let checkPrivelege = await Waiter.checkPrivelege(username)
 
   try {
     let shifts = await Waiter.getDaysAndNames()
@@ -233,4 +253,12 @@ app.get('/clear', async function (req, res, next) {
     return next(err)
   }
 
-})
+});
+
+
+//start the server
+let PORT = process.env.PORT || 5008;
+
+app.listen(PORT, function () {
+  console.log('App starting on port', PORT);
+});

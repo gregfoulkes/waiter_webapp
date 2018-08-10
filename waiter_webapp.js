@@ -70,18 +70,14 @@ module.exports = function (pool) {
 
   async function checkWaiter(checkName){
 
-    let getAllUserNames = await pool.query('select user_name from waiter')
-    let userNameRows = getAllUserNames.rows
-    for(let i=0;i<userNameRows.length; i++){
-      let userNameIndex = userNameRows[i];
-     if(userNameIndex.user_name == checkName){
-       return true
-     }else{
-      return false
+    let getAllUserNames = await pool.query('select count(*) as user_count from waiter where user_name = $1', [checkName]);
 
-     }
+    let userResult = getAllUserNames.rows[0]
+    if ( userResult.user_count && 
+        Number(userResult.user_count) === 1) {
+      return true;
     }
-
+    return false;
   }
 
   async function assignShifts(params) {
@@ -223,7 +219,6 @@ module.exports = function (pool) {
   }
 
   async function addClass() {
-
   }
 
   async function returnChecked(userName) {
@@ -244,14 +239,17 @@ module.exports = function (pool) {
   }
 
 
-  async function updateShifts(username){
+  async function checkPrivelege(username){
 
+    let checkUser = pool.query('select position from waiter where user_name =$1',[username])
     
-    let getShifts = await checkShifts(username)
+    if(checkUser == 'admin'){
+      return true
+    }
 
-    console.log(getShifts)
-
-
+    if(checkUser == 'waiter'){
+      return false
+    }
 
   }
 
@@ -271,7 +269,7 @@ module.exports = function (pool) {
   selectShift,
   returnChecked,
   checkWaiter,
-  updateShifts
+  checkPrivelege
 }
 
 
