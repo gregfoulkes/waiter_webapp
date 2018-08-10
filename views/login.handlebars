@@ -2,7 +2,7 @@
   <div class="column">
     <div class="ui segment">
       <h1 class="ui center aligned header">
-        waiter Availability
+        Waiter Availability
         <div class="sub header">Please Enter Your Name to Login</div>
       </h1>
     </div>
@@ -16,13 +16,18 @@
     <div class="ui four column centered grid">
 
       <div class="column">
+        {{#if messages.register}}
+        <div class ='register'>
+          {{messages.register}}
+        </div>
+        {{/if}}
         <div class="ui action input">
           <label for="Waiter"></label>
           <input type="text" placeholder="Enter a Name..." name="waiterName">
           <button class="ui button" type="submit">User</button>
         </div>
       </div>
-
+  
        <div class="column">
         <div class="ui action input">
           <label for="Waiter"></label>
@@ -33,4 +38,43 @@
 
     </div>
   </form>
+
+  <div class = 'ui one column centered grid'>
+   <div class ='column'>
+     <h3 class='ui center aligned header'> or</h>
+  <h2 class="ui center aligned icon header">
+  <i class="circular users icon"></i>
+  Register
+    </h2>  
+
+  </div>
+
+
+<form action="/register" method='post'>  
+  <div class='ui one column centered grid'>
+
+
+     <div class='column'>
+       <div class="ui form">
+        <div class="inline fields">
+          <div class="seven wide field">
+            <label>Full Name</label>
+            <input type="text" name='fullName' placeholder="Full Name">
+          </div>
+                     <label>Pick a User Name</label>
+
+          <div class="five wide field">
+            <input type="text" name='userName' placeholder="User Name">
+          </div>
+          <button class="ui button" type="submit">Register</button>
+
+        </div>
+
+      </div>
+     </div>
+      
+    
+    </div>
+    </form>
+ 
 </div>

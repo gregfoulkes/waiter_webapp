@@ -82,45 +82,6 @@ describe('Waiter Web App Functions', function() {
 
   })
 
-  // it('Should assign shifts to users and return all users and the days they are working', async function(){
-  //   var waiterApp = WaiterApp(pool);
-  //
-  //   await waiterApp.addWeekdays();
-  //   await waiterApp.addWaiters();
-  //   await waiterApp.assignShifts([{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
-  //
-  //   let checkAll = await waiterApp.checkAllShifts()
-  //
-  // //  console.log(await waiterApp.checkAllShifts())
-  //
-  //   //console.log(checkAll)
-  //
-  //   assert.deepEqual(checkAll, [{user_name: 'luvuyo', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
-  //
-  // })
-
-  // it('Should check a user_name and return the waiter user_name and all shift days', async function(){
-  //
-  //   const waiterApp = WaiterApp(pool);
-  //
-  //   const userData = [{user_name: 'greg', full_name: 'Greg Foulkes'}]
-  //
-  //   await waiterApp.addWaiters();
-  //   await waiterApp.addWeekdays();
-  //
-  //   await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}]);
-  //   await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Wednesday'}]);
-  //
-  //   assert.deepEqual(await waiterApp.checkShifts('greg'), [{ day_name:'Monday', user_name:'greg'},
-  //   {day_name:'Wednesday', user_name:'greg' }
-  //
-  //
-  //
-  //
-  //   ])
-  //
-  // });
-
   it ('Should clear all waiters shifts from shifts', async function(){
     const waiterApp = WaiterApp(pool);
     await waiterApp.addWeekdays()
@@ -164,7 +125,8 @@ describe('Waiter Web App Functions', function() {
     { user_name:'greg', full_name:'Greg Foulkes',day_name:'Thursday'}])})
 
 
-  it('Should take return waiter names and days they are working', async function(){
+  
+    it('Should take return waiter names and days they are working', async function(){
 
     var waiterApp = WaiterApp(pool);
 
@@ -207,6 +169,43 @@ describe('Waiter Web App Functions', function() {
     {day_name: 'Saturday'},
     {day_name: 'Sunday'},
   ])
+
+  })
+
+  it('Should return true if username exists', async function(){
+    var waiterApp = WaiterApp(pool);
+
+    const waiter = await waiterApp.addWaiter({
+      user_name: 'greg',
+      full_name: 'Greg Foulkes'
+    })
+
+    await waiterApp.addWeekdays();
+    
+    assert.equal(await waiterApp.checkWaiter('greg'), true)
+  })
+
+  it('Should return false if username does not exist', async function(){
+    var waiterApp = WaiterApp(pool);
+
+    const waiter = await waiterApp.addWaiter({
+      user_name: 'greg',
+      full_name: 'Greg Foulkes'
+    })
+
+    await waiterApp.addWeekdays();
+    
+    assert.equal(await waiterApp.checkWaiter('aviwe'), false)
+  })
+
+  it('Should update shifts by adding new ones and/or removing old or unchecked ones', async function(){
+    var waiterApp = WaiterApp(pool);
+
+    await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+    await waiterApp.assignShifts([{user_name: 'greg', day_name: 'Monday'}, {user_name: 'greg', day_name: 'Wednesday'}])
+
+    await waiterApp.updateShifts('greg');
 
   })
 

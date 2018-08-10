@@ -5,7 +5,8 @@
 
       <h1 class="ui center aligned header">
         Select Days
-        <div class="sub header">Hi <h4 class ='ui center aligned  dividing header'>{{foundUser}}</h4> Please Select the Days You would Like to Work</div>
+        <div class="sub header">Hi
+          <h4 class='ui center aligned  dividing header'>{{foundUser}}</h4> Please Select the Days You would Like to Work</div>
       </h1>
 
     </div>
@@ -14,50 +15,57 @@
 
 <div class="ui container">
 
-  <form class="" action="/waiters/{{username}}"  method="post">
+  <form class="" action="/waiters/{{username}}" method="post">
 
     <div class="ui seven column centered grid">
-<div class='column'>
-   {{#if messages.info}}
-        <h3 class = 'ui center aligned  dividing header green'> {{messages.info}}</h3>
-    {{/if}}
-</div>
-   
+      <div class='column'>
 
-  
+        {{#if messages.info}}
+        <div class='shift'>
+          <h3 class='ui center aligned  dividing header green'> {{messages.info}}</h3>
+        </div>
+        {{/if}}
+      </div>
+
+
+
 
       <div class="row">
-        {{!-- {{#each foundUser}} --}}
-        {{#each days}}
+        {{!-- {{#each foundUser}} --}} {{#each days}}
 
-          <div class="column">
+        <div class="column">
 
-            <div class="ui checkbox">
-              <input type="checkbox" name="dayName" 
-              {{checked}} 
-              value='{{day_name}}'>
-              <label>{{day_name}}</label>
-            </div>
+          <div class="ui checkbox">
+            <input type="checkbox" name="dayName" {{checked}} value='{{day_name}}'>
+            <label>{{day_name}}</label>
           </div>
+        </div>
 
-        {{/each}}
-        {{!-- {{/each}} --}}
+        {{/each}} {{!-- {{/each}} --}}
       </div>
-  <div class="column">
+      <div class="column">
         <button class="ui button" type="submit">Submit</button>
 
       </div>
-     
-      
-     <div class="column">
-      <a href="/"><i class="sign out alternate icon">Sign Out</i></a>                            
+
+
+      <div class="column">
+        <a href="/">
+          <i class="sign out alternate icon">Sign Out</i>
+        </a>
 
       </div>
 
 
-</div>
+    </div>
+
+
+
+
 
 </div>
 </form>
 
 </div>
+
+<script src="../timeout.js"></script>

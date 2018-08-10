@@ -57,7 +57,7 @@ module.exports = function (pool) {
 
   async function addWaiter(params) {
 
-    if (params.user_name != '' && params.name != '') {
+    if (params.user_name != '' && params.full_name != '') {
       await pool.query('INSERT INTO waiter (user_name, full_name) VALUES($1, $2)', [params.user_name, params.full_name])
       return true
     } else {
@@ -66,6 +66,22 @@ module.exports = function (pool) {
 
     let enteredUserNames = await pool.query('SELECT user_name, full_name from waiter')
     return enteredUserNames.rows
+  }
+
+  async function checkWaiter(checkName){
+
+    let getAllUserNames = await pool.query('select user_name from waiter')
+    let userNameRows = getAllUserNames.rows
+    for(let i=0;i<userNameRows.length; i++){
+      let userNameIndex = userNameRows[i];
+     if(userNameIndex.user_name == checkName){
+       return true
+     }else{
+      return false
+
+     }
+    }
+
   }
 
   async function assignShifts(params) {
@@ -223,23 +239,39 @@ module.exports = function (pool) {
         }
       }
 
-    }
-
-  
-    return {
-    addWeekdays,
-    addWaiter,
-    addWaiters,
-    assignShifts,
-    checkShifts,
-    checkAllShifts,
-    deleteWeekdays,
-    deleteUsers,
-    deleteShifts,
-    getWeekdays,
-    getDaysAndNames,
-    selectShift,
-    returnChecked
   }
+
+
+  async function updateShifts(params){
+
+    
+    let getShifts = await checkShifts(username)
+
+    console.log(getShifts)
+
+
+
+  }
+
+
+  return {
+  addWeekdays,
+  addWaiter,
+  addWaiters,
+  assignShifts,
+  checkShifts,
+  checkAllShifts,
+  deleteWeekdays,
+  deleteUsers,
+  deleteShifts,
+  getWeekdays,
+  getDaysAndNames,
+  selectShift,
+  returnChecked,
+  checkWaiter,
+  updateShifts
+}
+
+
 
 }

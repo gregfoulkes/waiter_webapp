@@ -79,16 +79,48 @@ app.get('/', async function (req, res, next) {
 
 app.post('/login', async function (req, res, next) {
 
-  try {
-    let name = req.body.waiterName
+  let name = req.body.waiterName
 
-    res.redirect('/waiters/' + name)
+let checkName = await Waiter.checkWaiter(name)
+  try {
+    if(checkName){
+      res.redirect('/waiters/' + name)
+
+    }if(!checkName){
+      req.flash('register', 'Please register your name')
+
+    }
+
+    // if()
+
     
   } catch (err) {
     return next(err)
   }
+})
 
+app.post('/register', async function (req, res, next){
+  let fullName = req.body.fullName
+  let userName = req.body.userName
 
+  console.log(userName)
+  console.log(fullName)
+
+  try {
+
+    let params = {
+      full_name: fullName,
+      user_name: userName
+    }
+
+    console.log(params)
+    
+    await Waiter.addWaiter(params)
+    res.redirect('')
+
+  } catch (err) {
+    return next(err)
+  }
 
 })
 
