@@ -104,6 +104,8 @@ module.exports = function (pool) {
   const selectShift = async (shift) => {
     const weekdays = shift.day_names;
     const findUsernameID = await pool.query('SELECT id From waiter WHERE user_name=$1', [shift.user_name]);
+    await pool.query('DELETE from shifts WHERE waiter_id = $1', [findUsernameID.rows[0].id]);
+    
     if (findUsernameID.rowCount > 0) {
       let userID = findUsernameID.rows[0].id;
       for (let day of weekdays) {
@@ -242,7 +244,7 @@ module.exports = function (pool) {
   }
 
 
-  async function updateShifts(params){
+  async function updateShifts(username){
 
     
     let getShifts = await checkShifts(username)
