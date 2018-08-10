@@ -13,19 +13,27 @@
 
   <form action="/login/" method="post">
 
+
+
     <div class="ui four column centered grid">
+ 
 
       <div class="column">
-        {{#if messages.register}}
-        <div class ='register'>
-          {{messages.register}}
-        </div>
-        {{/if}}
+    
         <div class="ui action input">
           <label for="Waiter"></label>
           <input type="text" placeholder="Enter a Name..." name="waiterName">
           <button class="ui button" type="submit">User</button>
         </div>
+      </div>
+
+      <div class='column'>
+        {{#if messages.register}}
+        <div class ='register'>
+              <h3 class='ui center aligned header orange'>  {{messages.register}}</h>
+        </div>
+        {{/if}}
+
       </div>
   
        <div class="column">
@@ -76,5 +84,23 @@
     
     </div>
     </form>
+
+  
+
  
 </div>
+     {{!-- <div class='column'> --}}
+        {{#if messages.registered}}
+        <div class ='registered'>
+              <h3 class='ui center aligned header green'>  {{messages.registered}}</h>
+        </div>
+        {{/if}}
+
+        {{#if messages.errors}}
+        <div class ='errors'>
+              <h3 class='ui center aligned header orange'>  {{messages.errors}}</h>
+        </div>
+        {{/if}}
+
+
+<script src="../timeout.js"></script>

@@ -82,12 +82,15 @@ app.post('/login', async function (req, res, next) {
   let name = req.body.waiterName
 
 let checkName = await Waiter.checkWaiter(name)
+
+console.log(checkName)
   try {
     if(checkName){
       res.redirect('/waiters/' + name)
 
-    }if(!checkName){
+    }if(checkName == false){
       req.flash('register', 'Please register your name')
+      res.redirect('/')
 
     }
 
@@ -106,17 +109,48 @@ app.post('/register', async function (req, res, next){
   console.log(userName)
   console.log(fullName)
 
-  try {
+  let params = {
+    full_name: fullName,
+    user_name: userName
+  }
 
-    let params = {
-      full_name: fullName,
-      user_name: userName
+
+  try {
+    const errors = [];
+    if( fullName == ''){
+
+      errors.push('Please Enter your Full Name')
     }
 
-    console.log(params)
+
+    if(userName == ''){
+      errors.push('Please Enter a Username')
+    }
+    console.log(errors)
+    if (errors.length > 0) {
+      req.flash('errors', errors);
+      res.redirect('/')
+    }
+
+
+    // do work here as we have all the data
+
+        console.log(params)
+        
+        let registerTrue = await Waiter.addWaiter(params)
+        if(registerTrue){
+          req.flash('registered', 'Succesfully Registered')
+          res.redirect('/')
+
+        }
+        //req.flash('invalid', 'Please Enter a User Name')
+      
+
+      
+
     
-    await Waiter.addWaiter(params)
-    res.redirect('')
+
+ 
 
   } catch (err) {
     return next(err)
