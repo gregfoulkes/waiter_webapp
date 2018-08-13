@@ -89,11 +89,13 @@ app.get('/', async function (req, res, next) {
 app.post('/login', async function (req, res, next) {
 
   let name = req.body.waiterName
-
+  let admin = req.body.adminName
 let checkName = await Waiter.checkWaiter(name)
 
 //console.log(checkName)
   try {
+   
+
     if(checkName){
       //
       req.session.user_name = name;
@@ -173,9 +175,13 @@ function checkAccess(req, res, next) {
 
 app.get('/waiters/:username', checkAccess, async function (req, res, next) {
 
-  let username = req.params.username
+  
+
 
   try {
+
+    let username = req.params.username
+
     let foundUser = await Waiter.returnChecked(username);
     //console.log(foundUser)
     res.render('waiter_webapp', {
@@ -192,6 +198,8 @@ app.get('/waiters/:username', checkAccess, async function (req, res, next) {
 app.post('/waiters/:username', async function (req, res, next) {
 
   let name = req.params.username
+
+  
 
   try {
 
@@ -226,21 +234,41 @@ app.get('/signout', function(req, res) {
   res.redirect('/');
 });
 
-app.get('/days', async function (req, res, next) {
 
- let checkPrivelege = await Waiter.checkPrivelege(username)
+async function isAdmin(req, res, next){
+  let admin = req.body.adminName
 
-  try {
-    let shifts = await Waiter.getDaysAndNames()
-    res.render('days', {
-      shifts
-    })
-  } catch (err) {
+  let checkAdmin = await Waiter.isAdmin(admin)
+  if(checkAdmin){
+      let shifts = await Waiter.getDaysAndNames()
+      return res.redirect('/days')
+    }
 
-    return next(err)
+    if(!checkAdmin){
+      req.flash('errors', 'You do not have administrator access')
+    return next()
+    }
+
   }
 
-});
+
+  next()
+}
+
+app.get('/days', isAdmin, async function (req, res, next) {
+
+ 
+   try {
+     let shifts = await Waiter.getDaysAndNames()
+     res.redirect('days', {
+       shifts
+     })
+   } catch (err) {
+ 
+     return next(err)
+   }
+ 
+ });
 
 app.get('/clear', async function (req, res, next) {
 

@@ -1,0 +1,15 @@
+1. I have just completed the waiters webapp project.
+
+2. I used my existing javascript, handlebars, html and database(postgres). I also used my existing knowledge of the express framework to set up and run my work on a local server. I deployed my app to heroku and tested on travis where I set up the necessary configurations in order to run and test my app with a database.
+
+3.I have made use of persisiting data before but it has always been text for the most part. In this project I used checkboxes to select days for work and made them persisiting checkboxes to reflect the days a user had already selected. 
+
+I found the semantic ui framework and found it to be probably the most useful of all the ui frameworks I have tried so far, at least for me. I learn't a lot about it in this project. 
+
+The other thing Ithat was new to me in this project was having to use multiple tables in my database and join them or find the relationship between them. I expanded my knowledge of the database query language to include things like joins this time.
+
+4.Using the semantic ui framework made it much easier for me to out together a quick interface for my app but I had a number of issues with it when trying to deploy my app to heroku and travis. This mainly had to do with it being installed as a dependency and some node packages it was trying to install when building on heroku, but I eventually figured it out and fixed the problem. 
+
+I have rarely had to write more than a one line query from a database with no more than two tables up until now so having to write multible line query and join two tables to a third one is still something I find quite challenging.
+
+5.I expanded my knowledge of the query language for postgres database and how to make use of multiple tables and joins etc. I used semantic-ui for the first time and learn't a bit about how to implement it to quickly put together an interface for my app. I leatn't to create persitent checkboxes. 

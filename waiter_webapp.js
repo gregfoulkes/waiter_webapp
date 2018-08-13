@@ -4,19 +4,26 @@ module.exports = function (pool) {
 
   let userData = [{
       user_name: 'greg',
-      full_name: 'Greg Foulkes'
+      full_name: 'Greg Foulkes',
+      position: 'admin'
     },
     {
       user_name: 'aya',
-      full_name: 'Ayabonga Booi'
+      full_name: 'Ayabonga Booi',
+      position: 'waiter'
+
     },
     {
       user_name: 'luvuyo',
-      full_name: 'Luvuyo Sono'
+      full_name: 'Luvuyo Sono',
+      position: 'waiter'
+
     },
     {
       user_name: 'aviwe',
-      full_name: 'Aviwe Mbekeni'
+      full_name: 'Aviwe Mbekeni',
+      position: 'waiter'
+
     }
   ]
 
@@ -48,7 +55,7 @@ module.exports = function (pool) {
   async function addWaiters() {
 
     for (let user of userData) {
-      await pool.query('INSERT INTO waiter (user_name, full_name) VALUES($1, $2)', [user.user_name, user.full_name]);
+      await pool.query('INSERT INTO waiter (user_name, full_name, position) VALUES($1, $2, $3)', [user.user_name, user.full_name, user.position]);
     }
 
     let enteredUserNames = await pool.query('SELECT user_name, full_name from waiter')
@@ -58,7 +65,7 @@ module.exports = function (pool) {
   async function addWaiter(params) {
 
     if (params.user_name != '' && params.full_name != '') {
-      await pool.query('INSERT INTO waiter (user_name, full_name) VALUES($1, $2)', [params.user_name, params.full_name])
+      await pool.query('INSERT INTO waiter (user_name, full_name, position) VALUES($1, $2, $3)', [params.user_name, params.full_name, 'waiter'])
       return true
     } else {
       return false
@@ -239,7 +246,7 @@ module.exports = function (pool) {
   }
 
 
-  async function checkPrivelege(username){
+  async function isAdmin(username){
 
     let checkUser = pool.query('select position from waiter where user_name =$1',[username])
     
@@ -269,7 +276,7 @@ module.exports = function (pool) {
   selectShift,
   returnChecked,
   checkWaiter,
-  checkPrivelege
+  isAdmin
 }
 
 

@@ -1,0 +1,7 @@
+- use input and validate admin or waiter using middleware function to redirect to relevant route i.e days if == admin or waiter_webapp if == waiter
+
+- clean up code.
+
+-watch video to separate index.js routes and setup functions.
+
+-configure eslint
