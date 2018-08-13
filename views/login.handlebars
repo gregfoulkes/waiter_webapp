@@ -23,29 +23,39 @@
         <div class="ui action input">
           <label for="Waiter"></label>
           <input type="text" placeholder="Enter a Name..." name="waiterName">
-          <button class="ui button" type="submit">User</button>
+          <button class="ui button" type="submit">Submit</button>
         </div>
       </div>
 
-      <div class='column'>
+ 
+  
+       {{!-- <div class="column">
+        <div class="ui action input">
+          <label for="Waiter"></label>
+          <input type="text" placeholder="Enter a Name..." name="adminName">
+        <button class="ui button" type="submit">Admin</button>
+
+        </div>
+      </div> --}}
+
+    </div>
+
+    <div class='ui one column centered grid'>
+           <div class='column'>
         {{#if messages.register}}
+
         <div class ='register'>
               <h3 class='ui center aligned header orange'>  {{messages.register}}</h>
         </div>
         {{/if}}
 
-      </div>
-  
-       <div class="column">
-        <div class="ui action input">
-          <label for="Waiter"></label>
-          <input type="text" placeholder="Enter a Name..." name="adminName">
-         {{!-- <a href="/days"><button class="ui button" type="button">Admin</button></a>  --}}
-        <button class="ui button" type="submit">Admin</button>
-
+        {{#if messages.errors}}
+        <div class ='register'>
+              <h3 class='ui center aligned header orange'>  {{messages.errors}}</h>
         </div>
-      </div>
+        {{/if}}
 
+      </div>
     </div>
   </form>
 
@@ -98,11 +108,11 @@
         </div>
         {{/if}}
 
-        {{#if messages.errors}}
-        <div class ='errors'>
+        {{!-- {{#if messages.errors}}
+        <div class ='registered'>
               <h3 class='ui center aligned header orange'>  {{messages.errors}}</h>
         </div>
-        {{/if}}
+        {{/if}} --}}
 
 
 <script src="../timeout.js"></script>
