@@ -61,10 +61,10 @@ describe('Waiter Web App Functions', function() {
   it('Should add all user/waiter names and return all the waiters full names and usernames', async function(){
     var waiterApp = WaiterApp(pool);
 
-    assert.deepEqual(await waiterApp.addWaiters(), [{user_name: 'greg', full_name: 'Greg Foulkes', position:'admin'},
-      {user_name: 'aya', full_name: 'Ayabonga Booi',position:'waiter'},
-      {user_name: 'luvuyo', full_name: 'Luvuyo Sono', position:'waiter' },
-      {user_name: 'aviwe', full_name: 'Aviwe Mbekeni', position:'waiter'}
+    assert.deepEqual(await waiterApp.addWaiters(), [{user_name: 'greg', position:'admin', full_name: 'Greg Foulkes'},
+      {user_name: 'aya', position:'waiter', full_name: 'Ayabonga Booi'},
+      {user_name: 'luvuyo',position:'waiter', full_name: 'Luvuyo Sono' },
+      {user_name: 'aviwe', position:'waiter', full_name: 'Aviwe Mbekeni'}
     ])
 
     //console.log(await waiterApp.addWaiters(userData))

@@ -58,7 +58,7 @@ module.exports = function (pool) {
       await pool.query('INSERT INTO waiter (user_name, full_name, position) VALUES($1, $2, $3)', [user.user_name, user.full_name, user.position]);
     }
 
-    let enteredUserNames = await pool.query('SELECT user_name, full_name from waiter')
+    let enteredUserNames = await pool.query('SELECT user_name, full_name, position from waiter')
     return enteredUserNames.rows
   }
 
