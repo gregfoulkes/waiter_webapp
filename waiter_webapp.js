@@ -246,17 +246,43 @@ module.exports = function (pool) {
   }
 
 
+  // async function isAdmin(username){
+
+  //   let checkUser = pool.query('select position from waiter where user_name =$1',[username])
+    
+  //   if(checkUser == 'admin'){
+  //     return true
+  //   }
+
+  //   if(checkUser == 'waiter'){
+  //     return false
+  //   }
+
+  // }
+
   async function isAdmin(username){
 
-    let checkUser = pool.query('select position from waiter where user_name =$1',[username])
-    
-    if(checkUser == 'admin'){
-      return true
-    }
+    let checkUser = await pool.query('select position from waiter where user_name =$1',[username])
+    //console.log(checkUser)
 
-    if(checkUser == 'waiter'){
-      return false
+    var results = checkUser.rows;
+    
+    if (results.length > 0) {
+      let result =  results[0].position
+      return result == 'admin'
+      //return checkUser.rows[0].position
     }
+    
+    return false;
+
+
+    // if(result == 'admin'){
+    //   return result
+    // }
+
+    // if(result == undefined || result == 'waiter'){
+    //   return //false
+    // }
 
   }
 

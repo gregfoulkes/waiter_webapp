@@ -224,22 +224,29 @@ describe('Waiter Web App Functions', function() {
   
   })
 
-  it('Should check a users access privileges and return true', async function(){
+  it('Should check a users access privileges and return true if name = admin', async function(){
+    var waiterApp = WaiterApp(pool);
+    await waiterApp.addWeekdays();
+    await waiterApp.addWaiters();
+   // console.log(await waiterApp.isAdmin('greg'))
+    assert.equal(await waiterApp.isAdmin('greg'), true)
+  })
+
+  it('Should check a users access privileges and return false if name = waiter', async function(){
     var waiterApp = WaiterApp(pool);
     await waiterApp.addWeekdays();
     await waiterApp.addWaiters();
 
-    assert.equal(await waiterApp.isAdmin('greg', true))
-
+    assert.equal(await waiterApp.isAdmin('aviwe'), false)
 
   })
 
-  it('Should check a users access privileges and return false', async function(){
+  it('Should check a users access privileges and return false if name not in db', async function(){
     var waiterApp = WaiterApp(pool);
     await waiterApp.addWeekdays();
     await waiterApp.addWaiters();
 
-    assert.equal(await waiterApp.isAdmin('aviwe', false))
+    assert.equal(await waiterApp.isAdmin('ross'), false)
 
   })
 
