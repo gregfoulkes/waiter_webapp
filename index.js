@@ -60,21 +60,8 @@ app.engine('handlebars', exphbs({
 
 app.set('view engine', 'handlebars');
 
-//call factory function
-
-
 app.use(function (req, res, next) {
 
-
-
-  // if ( (req.path === '/' || req.path === 'login')) {
-  //   return next();
-  // }  
-
-  // if(!req.session.user_name) {
-  //   req.flash('register', 'Please login')
-  //   return res.redirect('/');
-  // }
   next();
 
 });
@@ -86,31 +73,13 @@ app.get('/', async function (req, res, next) {
   res.render('login')
 })
 
-
-// async function isAdmin(req, res, next, name) {
-//   // let name = req.body.waiterName
-//   console.log('user: ' + name)
-//   let checkAdmin = await Waiter.isAdmin(name)
-//   //console.log(checkAdmin)
-//   if (checkAdmin) {
-//     let shifts = await Waiter.getDaysAndNames()
-//     return res.redirect('/days')
-//   }
-
-//   if (!checkAdmin) {
-//     req.flash('errors', 'You do not have administrator access')
-//     return next()
-//   }
-//   next()
-// }
-
 app.post('/login', async function (req, res, next) {
 
-  
+
   try {
-    let name = req.body.waiterName  
+    let name = req.body.waiterName
     let isAdmin = await Waiter.isAdmin(name)
-    
+
     if (isAdmin) {
       return res.redirect('/days')
     }
@@ -119,11 +88,11 @@ app.post('/login', async function (req, res, next) {
     if (isWaiter) {
       req.session.user_name = name;
       return res.redirect('/waiters/' + name)
-    } 
-    
+    }
+
     req.flash('register', 'Please register your name');
     return res.redirect('/');
-    
+
 
   } catch (err) {
     return next(err)
@@ -134,9 +103,6 @@ app.post('/login', async function (req, res, next) {
 app.post('/register', async function (req, res, next) {
   let fullName = req.body.fullName
   let userName = req.body.userName
-
-  // console.log(userName)
-  // console.log(fullName)
 
   let params = {
     full_name: fullName,
@@ -181,11 +147,9 @@ function checkAccess(req, res, next) {
 app.get('/waiters/:username', checkAccess, async function (req, res, next) {
 
   try {
-    // isAdmin()
     let username = req.params.username
 
     let foundUser = await Waiter.returnChecked(username);
-    //console.log(foundUser)
     res.render('waiter_webapp', {
       days: await Waiter.getWeekdays(username),
       username,
@@ -253,7 +217,6 @@ app.get('/days', async function (req, res, next) {
 app.get('/clear', async function (req, res, next) {
 
   try {
-    //let getDays = await Waiter.getWeekdays()
     await Waiter.deleteShifts()
     res.redirect('/days')
 
@@ -262,7 +225,6 @@ app.get('/clear', async function (req, res, next) {
   }
 
 });
-
 
 //start the server
 let PORT = process.env.PORT || 5008;

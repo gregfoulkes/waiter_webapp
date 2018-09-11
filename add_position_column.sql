@@ -1,0 +1,1 @@
+ alter table waiter add column position text not null default '';
